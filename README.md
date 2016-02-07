@@ -14,6 +14,7 @@ Added Color to Graphics.
 Added Transition.  
 Added FadeOut to Transition.  
 Added FadeIn to Transition.  
+Added Timer.  
   
   </br>
 Feel free to make contributions.  
