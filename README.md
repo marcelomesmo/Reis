@@ -1,6 +1,7 @@
 # Raiz
 
-Raiz is a cross-platform game engine writen in C++/SDL.
+Raiz is a cross-platform game engine writen in C++/SDL.  
+Refactoring code since February, 2016.  
 
 Current version 0.0.1 - February, 2016.
 
@@ -16,11 +17,16 @@ Added FadeOut to Transition.
 Added FadeIn to Transition.  
 Added Timer.  
   
+10/02/2016
+Added Input.  
+Added keyboard support into Input.  
+Added mouse support into Input.  
+  
   </br>
 Feel free to make contributions.  
 
 Authors’ contact:  
 https://marcelomesmo.github.io  
 marcelo.barbosa (at) ifrn.edu.br   
-
-Raiz is licensed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).
+  
+Raiz is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).

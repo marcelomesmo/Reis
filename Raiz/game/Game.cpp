@@ -7,6 +7,8 @@ void Game::init(const char* title, int width, int height, bool set_fullscreen, b
 	g.init(title, width, height, set_fullscreen);
 	fullscreen = set_fullscreen;
 
+	input.init();
+
 	// leaveTRansition
 	leaveTransition = NULL;
 	enterTransition = NULL;
@@ -39,7 +41,8 @@ void Game::free()
 	// Clean up Graphics
 	g.free();
 
-	//Input::free();
+	// Clean up Input
+	input.free();
 
 	printf("Game Cleanup\n");
 }
@@ -89,6 +92,9 @@ void Game::changeState(GameState* state)
 	// Reset Graphics to original Font and Color config
 	g.reset();
 	// This is intended to avoid Font and Color/BgColor changes persistence between GameStates
+	// Reset Input to original state (empty)
+	input.clear();
+	// This is intended to avoid key presses persistence between GameStates
 
 	// store and init the new state
 	states.push_back(state);
@@ -127,7 +133,7 @@ void Game::start()
 	if (statesList.size() != 0)
 	{
 		changeState(statesList[0]);
-		printf("Early game, loading first state\n");
+		//printf("Early game, loading first state\n");
 	}
 	else {
 		printf("Error ocurred in initialization while loading first GameState."); 
@@ -147,8 +153,8 @@ void Game::start()
 void Game::update()
 {
 	// Handle input events
-	//InputManager::clear();
-	//InputManager::update();
+	input.clear();
+	input.update();
 
 	// Calculate delta
 	thisTime = SDL_GetTicks();
@@ -163,31 +169,32 @@ void Game::update()
 		leaveTransition->update(this, delta);
 		if (leaveTransition->isFinished())
 		{
-			printf("finished LEAVE transition, loading state\n");
+			//printf("finished LEAVE transition, loading state\n");
 			changeState(statesList[nextState]);
 			delete leaveTransition;
 			leaveTransition = NULL;
-			// enterTransition.start();
 		}
 		else
 			return;
+		// Only goes pass this point when leaveTransition has finished (stop going on above 'return')
 	}
-
+	
 	if (enterTransition != NULL)
 	{
 		enterTransition->update(this, delta);
 		if (enterTransition->isFinished())
 		{
-			printf("finished ENTER transition, state fully loaded\n");
+			//printf("finished ENTER transition, state fully loaded\n");
 			delete enterTransition;
 			enterTransition = NULL;
 		}
 		else
 			return;
+		// Only updates state if enterTransition has finished (stop going on above 'return')
 	}
 
 	// Let the current State update the game.
-	states.back()->update(this, delta);
+	states.back()->update(this, input, delta);
 }
 
 void Game::render()
@@ -196,10 +203,8 @@ void Game::render()
 	g.begin();
 
 	// Pre-render transition here
-	/*
-		if (leaveTransition != NULL) leaveTransition->preRender(g);
-		else if (enterTransition != NULL) enterTransition->preRender(g);
-	*/
+	if (leaveTransition != NULL) leaveTransition->preRender(g);
+	else if (enterTransition != NULL) enterTransition->preRender(g);
 
 	// Let the current state draw the screen
 	states.back()->render(this, g);

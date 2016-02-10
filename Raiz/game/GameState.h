@@ -38,7 +38,7 @@ public:
 	 * @param      game   The Game object application in which the GameState is hosted.
 	 * @param[in]  delta  The amount of time in milliseconds since last update.
 	 */
-	virtual void update(Game* game, float delta) = 0;
+	virtual void update(Game* game, Input& input, float delta) = 0;
 	/**
 	 * @brief      Render the GameState. Render the game's screen here.
 	 *

@@ -6,7 +6,7 @@
 using namespace std;
 
 #include "../graphics/Graphics.h"
-//#include "../input/Input.h"
+#include "../input/Input.h"
 #include "../data/Timer.h"
 
 /// GameState foward declaration to resolve circular depedency.
@@ -81,6 +81,11 @@ private:
 	 * The Graphics component. Used to render stuff on screen.
 	 */
 	Graphics g;
+
+	/**
+	* The Input manager. Used to handle keyboard, mouse and controller input.
+	*/
+	Input input;
 
 	/**
 	 * @brief      Adds a delay to the Game window based on target FPS.

@@ -17,7 +17,6 @@ void FadeOut::update(Game* g, float delta)
 {
 	// Adds normalized delta (delta*1000) * the increment (maxNum / time).
 	alpha += delta * 1000 * (255.0f / fadeTime);
-	cout << alpha << endl;
 	// Convert float value into Uint8 and saves to SDL_COLOR alpha.
 	if (alpha >= 255) cor.a = 255;
 	else cor.a = (Uint8) alpha;
