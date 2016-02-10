@@ -28,38 +28,45 @@ public:
 	bool isKeyDown(KeyboardKey key);
 
 	// Tells if the mouse *button* was pressed just now.
-	//bool isMousePressed(uint8_t button);
-
+	bool isMousePressed(Uint8 button);
 	// Tells if the mouse *button* was released just now.
-	//bool isMouseReleased(uint8_t button);
-
+	bool isMouseReleased(Uint8 button);
 	// Tells if the mouse *button* is currently being pressed.
-	//
-	//  ## Possible options are
-	//  SDL_BUTTON_LEFT:   left mouse button
-	//  SDL_BUTTON_MIDDLE: middle mouse button
-	//  SDL_BUTTON_RIGHT:  right mouse button
-	//bool isMouseDown(uint8_t button);
+	bool isMouseDown(Uint8 button);
+	
+	// Works both ways, with SDL_MouseButtonEvent or with MouseButton (easier to type)
+	bool isMousePressed(MouseButton button);
+	bool isMouseReleased(MouseButton button);
+	bool isMouseDown(MouseButton button);
+
+	// Returns the current mouse X position.
+	int getMouseX();
+	// Returns the current mouse Y position.
+	int getMouseY();
+
+	// Tells if the mouse's currently inside the rectangle
+	//  specified by #x, #y, #w and #h.
+	bool isMouseInside(int x, int y, int w, int h);
+	// TO DO
+	bool isMouseInside(SDL_Rect* box);
+	//bool isMouseInside(Shape* box);
+	bool isMouseMoving();
+	bool isMouseMovingRight();
+	bool isMouseMovingLeft();
+	bool isMouseMovingUp();
+	bool isMouseMovingDown();
 
 	// Tells if the user asked the game to quit
 	// (Alt+F4 or close button).
 	bool quitRequested();
 
-	// Returns the current mouse X position.
-	//int getMouseX();
-
-	// Returns the current mouse Y position.
-	//int getMouseY();
-
-	// Tells if the mouse's currently inside the rectangle
-	//  specified by #x, #y, #w and #h.
-	//bool isMouseInside(int x, int y, int w, int h);
-	// TO DO
-	//bool isMouseInside(SDL_Rect* box);
+	// Calling lockInput and unlockInput will lock/unlock all inputs by default.
+	void lockInput(InputType peripheral = InputType::ALL_INPUTS);
+	void unlockInput(InputType peripheral = InputType::ALL_INPUTS);
+	// To lock/unlock you need to pass a InputType enum: MOUSE, KEYBOARD, CONTROLLER or ALL_INPUTS
 
 private:
-	/// Saves SDL internal keyboard state. (DEPRECATED)
-	//const uint8_t* keyboard;
+
 	// Saves which keys are currently pressed.
 	std::map<SDL_Scancode, bool> keyPressed;
 	// Saves which keys are currently released.
@@ -70,16 +77,23 @@ private:
 	// Convertes a KeyboardKey to a SDL_Scancode, based on internal value (decimal, see table)
 	SDL_Scancode keyToScanCode;
 
-	/// Saves SDL internal mouse state.
-	//uint8_t  mouse;
+	std::map<Uint8, bool> mousePressed;
+	std::map<Uint8, bool> mouseReleased;
+	std::map<Uint8, bool> mouseDown;
+
+	Uint8 mouseToButtonCode;
+
+	bool isKeyboardLocked;
+	bool isMouseLocked;
+	bool isControllerLocked;
+
 	/// Current mouse X position.
-	//int  mouseX;
+	int  mouseX;
 	/// Current mouse Y position.
-	//int  mouseY;
-	/// Saves which mouse buttons are currently up.
-	//bool mousePressed[MOUSE_SIZE];
-	/// Saves which mouse buttons are currently up.
-	//bool mouseReleased[MOUSE_SIZE];
+	int  mouseY;
+	/// Relative mouse direction
+	int mouseDirX;
+	int mouseDirY;
 
 	/// Tells if we must quit the game.
 	bool do_quit;

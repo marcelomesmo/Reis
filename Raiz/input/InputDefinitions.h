@@ -3,9 +3,14 @@
 
 #include <SDL.h>
 
-/*	Disclaimer Notice:
-	Not my code, this was taken from Alex Dantas' projects [https://github.com/alexdantas].
-*/
+enum class InputType
+{
+	KEYBOARD,
+	MOUSE,
+	CONTROLLER,
+	ALL_INPUTS,
+	UNKNOWN
+};
 
 /// The number of keys on a keyboard. To be used with InputManager.
 /// 
@@ -14,10 +19,13 @@
 ///
 /// According to it (on Fri Jan  3 20:04:28 BRST 2014), the
 /// maximum key value is 282.
-#define KEYBOARD_SIZE 282
-
+//#define KEYBOARD_SIZE 282
 //#define MOUSE_SIZE 3
+// DEPRECATED
 
+/*	Disclaimer Notice:
+Not my code, this was taken from Alex Dantas' projects [https://github.com/alexdantas].
+*/
 /// I've made the following table according to this reference:
 /// http://wiki.libsdl.org/SDLScancodeLookup
 ///
@@ -281,5 +289,42 @@ enum MouseButton
 };
 
 // ADD CONTROLLER SUPPORT
+enum ControllerButton
+{
+	/*	GAME CONTROLLER BUTTONS
+
+	 SDL_CONTROLLER_BUTTON_INVALID
+SDL_CONTROLLER_BUTTON_A
+SDL_CONTROLLER_BUTTON_B
+SDL_CONTROLLER_BUTTON_X
+SDL_CONTROLLER_BUTTON_Y
+SDL_CONTROLLER_BUTTON_BACK
+SDL_CONTROLLER_BUTTON_GUIDE
+SDL_CONTROLLER_BUTTON_START
+SDL_CONTROLLER_BUTTON_LEFTSTICK
+SDL_CONTROLLER_BUTTON_RIGHTSTICK
+SDL_CONTROLLER_BUTTON_LEFTSHOULDER
+SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
+SDL_CONTROLLER_BUTTON_DPAD_UP
+SDL_CONTROLLER_BUTTON_DPAD_DOWN
+SDL_CONTROLLER_BUTTON_DPAD_LEFT
+SDL_CONTROLLER_BUTTON_DPAD_RIGHT
+SDL_CONTROLLER_BUTTON_MAX 
+
+	*/
+
+	/* GAME CONTROLLER AXIS
+
+	SDL_CONTROLLER_AXIS_INVALID
+	SDL_CONTROLLER_AXIS_LEFTX
+	SDL_CONTROLLER_AXIS_LEFTY
+	SDL_CONTROLLER_AXIS_RIGHTX
+	SDL_CONTROLLER_AXIS_RIGHTY
+	SDL_CONTROLLER_AXIS_TRIGGERLEFT
+	SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+	SDL_CONTROLLER_AXIS_MAX
+
+	*/
+};
 
 #endif
