@@ -38,11 +38,13 @@ void Game::free()
 		states.pop_back();
 	}
 
+	// Clean up Input
+	input.free();
+	// Clean first so Subsystem is cleared before SDL_Quit (in Graphics)
+
 	// Clean up Graphics
 	g.free();
 
-	// Clean up Input
-	input.free();
 
 	printf("Game Cleanup\n");
 }

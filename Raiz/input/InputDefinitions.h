@@ -3,6 +3,11 @@
 
 #include <SDL.h>
 
+/** @enum mapper::InputType
+*  \author marcelomesmo
+*  \ingroup Input
+*  @brief A simple strongly typed enum represeting game Inputs.
+*/
 enum class InputType
 {
 	KEYBOARD,
@@ -12,25 +17,15 @@ enum class InputType
 	UNKNOWN
 };
 
-/// The number of keys on a keyboard. To be used with InputManager.
-/// 
-/// Taken from:
-/// http://wiki.libsdl.org/SDLScancodeLookup
-///
-/// According to it (on Fri Jan  3 20:04:28 BRST 2014), the
-/// maximum key value is 282.
-//#define KEYBOARD_SIZE 282
-//#define MOUSE_SIZE 3
-// DEPRECATED
-
-/*	Disclaimer Notice:
-Not my code, this was taken from Alex Dantas' projects [https://github.com/alexdantas].
+/** @enum mapper::KeyboardKey
+*  \author Alex Dantas
+*  \ingroup Input
+*  @brief A simple enum represeting Keyboard inputs. Taken from Alex Dantas' project [https://github.com/alexdantas].
 */
-/// I've made the following table according to this reference:
-/// http://wiki.libsdl.org/SDLScancodeLookup
-///
 enum KeyboardKey
 {
+	// I've made the following table according to this reference:
+	// http://wiki.libsdl.org/SDLScancodeLookup
 	KEY_UNKNOWN = SDL_SCANCODE_UNKNOWN,
 	KEY_A = SDL_SCANCODE_A,
 	KEY_B = SDL_SCANCODE_B,
@@ -278,53 +273,82 @@ enum KeyboardKey
 	KEY_SLEEP = SDL_SCANCODE_SLEEP
 };
 
-// All mouse buttons (except for the middle one).
+/** @enum mapper::MouseButton
+*  \author marcelomesmo
+*  \ingroup Input
+*  @brief A simple enum represeting Mouse inputs.
+*/
 enum MouseButton
 {
 	MOUSE_LEFT = SDL_BUTTON_LEFT,
 	MOUSE_MIDDLE = SDL_BUTTON_MIDDLE,
-	MOUSE_RIGHT = SDL_BUTTON_RIGHT,
-	MOUSE_MAX   // No button, just to define max
-	// array size.
+	MOUSE_RIGHT = SDL_BUTTON_RIGHT
 };
 
-// ADD CONTROLLER SUPPORT
+/**
+ * Maximun number of game Controllers (joysticks, gamepads, etc).
+ */
+#define MAX_CONTROLLERS 4
+
+/** @enum mapper::ControllerButton
+*  \author marcelomesmo
+*  \ingroup Input
+*  @brief A simple enum represeting Joystick controller inputs (Buttons).
+*/
 enum ControllerButton
 {
-	/*	GAME CONTROLLER BUTTONS
+	/*	GAME CONTROLLER BUTTONS */
+	CONTROLLER_INVALID = SDL_CONTROLLER_BUTTON_INVALID,
+	CONTROLLER_A = SDL_CONTROLLER_BUTTON_A,
+	CONTROLLER_B = SDL_CONTROLLER_BUTTON_B,
+	CONTROLLER_X = SDL_CONTROLLER_BUTTON_X,
+	CONTROLLER_Y = SDL_CONTROLLER_BUTTON_Y,
+	CONTROLLER_BACK = SDL_CONTROLLER_BUTTON_BACK,
+	CONTROLLER_GUIDE = SDL_CONTROLLER_BUTTON_GUIDE,
+	CONTROLLER_START = SDL_CONTROLLER_BUTTON_START,
+	CONTROLLER_LEFTSTICK = SDL_CONTROLLER_BUTTON_LEFTSTICK,
+	CONTROLLER_RIGHTSTICK = SDL_CONTROLLER_BUTTON_RIGHTSTICK,
+	CONTROLLER_LS = SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
+	CONTROLLER_RS = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+	CONTROLLER_DPAD_UP = SDL_CONTROLLER_BUTTON_DPAD_UP,
+	CONTROLLER_DPAD_DOWN = SDL_CONTROLLER_BUTTON_DPAD_DOWN,
+	CONTROLLER_DPAD_LEFT = SDL_CONTROLLER_BUTTON_DPAD_LEFT,
+	CONTROLLER_DPAD_RIGHT = SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+	CONTROLLER_MAX = SDL_CONTROLLER_BUTTON_MAX
+};
 
-	 SDL_CONTROLLER_BUTTON_INVALID
-SDL_CONTROLLER_BUTTON_A
-SDL_CONTROLLER_BUTTON_B
-SDL_CONTROLLER_BUTTON_X
-SDL_CONTROLLER_BUTTON_Y
-SDL_CONTROLLER_BUTTON_BACK
-SDL_CONTROLLER_BUTTON_GUIDE
-SDL_CONTROLLER_BUTTON_START
-SDL_CONTROLLER_BUTTON_LEFTSTICK
-SDL_CONTROLLER_BUTTON_RIGHTSTICK
-SDL_CONTROLLER_BUTTON_LEFTSHOULDER
-SDL_CONTROLLER_BUTTON_RIGHTSHOULDER
-SDL_CONTROLLER_BUTTON_DPAD_UP
-SDL_CONTROLLER_BUTTON_DPAD_DOWN
-SDL_CONTROLLER_BUTTON_DPAD_LEFT
-SDL_CONTROLLER_BUTTON_DPAD_RIGHT
-SDL_CONTROLLER_BUTTON_MAX 
+/**
+ * Controller AXIS maximun dead zone range.
+ */
+const int AXIS_RANGE = 32767; 
+/**
+ * Controller Axis varies from -32768 to 32767 while Triggers 
+ * varies from 0 to 32767 (never returning negative values).
+ * 
+ * Axis dead zone is calculate by: AXIS_RANGE * sensibility,
+ * where sensibility is a float control that varies from 0 to 1.
+ * 
+ * Default sensibility starts at 0.25, meaning a 32k*0.25 = 8000 dead zone.
+ * 
+ * Reference: https://wiki.libsdl.org/SDL_GameControllerGetAxis
+ */
 
-	*/
-
-	/* GAME CONTROLLER AXIS
-
-	SDL_CONTROLLER_AXIS_INVALID
-	SDL_CONTROLLER_AXIS_LEFTX
-	SDL_CONTROLLER_AXIS_LEFTY
-	SDL_CONTROLLER_AXIS_RIGHTX
-	SDL_CONTROLLER_AXIS_RIGHTY
-	SDL_CONTROLLER_AXIS_TRIGGERLEFT
-	SDL_CONTROLLER_AXIS_TRIGGERRIGHT
-	SDL_CONTROLLER_AXIS_MAX
-
-	*/
+/** @enum mapper::ControllerAxis
+*  \author marcelomesmo
+*  \ingroup Input
+*  @brief A simple enum represeting Joystick controller inputs (Axis and Triggers).
+*/
+enum ControllerAxis
+{
+	/* GAME CONTROLLER AXIS */
+	CONTROLLER_AXIS_INVALID = SDL_CONTROLLER_AXIS_INVALID,
+	CONTROLLER_LEFT_ANALOG_X = SDL_CONTROLLER_AXIS_LEFTX,
+	CONTROLLER_LEFT_ANALOG_Y = SDL_CONTROLLER_AXIS_LEFTY,
+	CONTROLLER_RIGHT_ANALOG_X = SDL_CONTROLLER_AXIS_RIGHTX,
+	CONTROLLER_RIGHT_ANALOG_Y = SDL_CONTROLLER_AXIS_RIGHTY,
+	CONTROLLER_LT = SDL_CONTROLLER_AXIS_TRIGGERLEFT,
+	CONTROLLER_RT = SDL_CONTROLLER_AXIS_TRIGGERRIGHT,
+	CONTROLLER_AXIS_MAX = SDL_CONTROLLER_AXIS_MAX
 };
 
 #endif
