@@ -1,4 +1,4 @@
-
+/*
 Reis Game Engine
 Copyright (C) 2015-2016 Marcelo de Barros <marcelo.barbosa@ifrn.edu.br>
 
@@ -19,3 +19,33 @@ appreciated but is not required.
 misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source distribution.
+*/
+
+/**
+*  \file Reis.h
+*  \author	marcelomesmo
+*
+*  Main include header for the Raiz Game Engine.
+*/
+#ifndef _REIS_H
+#define _REIS_H
+/*
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2main.lib") 
+#pragma comment(lib, "SDL2_image.lib")
+#pragma comment(lib, "SDL2_ttf.lib") 
+#pragma comment(lib, "SDL2_mixer.lib") 
+*/
+#include "game\Game.h"
+#include "game\GameState.h"
+#include "data\Timer.h"
+#include "graphics\Graphics.h"
+#include "graphics\Color.h"
+#include "graphics\font\Font.h"
+#include "game\transition\Transition.h"
+#include "game\transition\FadeIn.h"
+#include "game\transition\FadeOut.h"
+#include "input\InputDefinitions.h"
+#include "input\Input.h"
+
+#endif

@@ -1,9 +1,12 @@
-# Raiz
+![alt tag](Reis/assets/Reis-logo.png)  
+  
+  </br>
+# Reis  
+  
+**Reis** is a cross-platform 2D game engine writen in C++/SDL.  
+Refactoring code since *February*, 2016.  
 
-Raiz is a cross-platform game engine writen in C++/SDL.  
-Refactoring code since February, 2016.  
-
-Current version 0.0.1 - February, 2016.
+Current version 0.0.1 - February, 2016.  Javadoc available [here](javadoc/html/index.html).
 
 Refactoring Journal:
 
@@ -22,8 +25,18 @@ Added Input.
 Added keyboard support into Input.  
 Added mouse support into Input.  
   
+14/02/2016  
+Added controller support into Input.  
+  
+16/02/2016
+Added multiple controller support.  
+Changed name from Raiz to **Reis**.  
+Added [javadoc](javadoc/html/index.html) and icon.  
+
+  
   </br>
 Feel free to make contributions.  
+If you encounter any bugs, please send me an email.  
 
 Authors’ contact:  
 https://marcelomesmo.github.io  
