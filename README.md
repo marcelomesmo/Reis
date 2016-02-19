@@ -40,4 +40,4 @@ Authors’ contact:
 https://marcelomesmo.github.io  
 marcelo.barbosa (at) ifrn.edu.br   
   
-Raiz is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).
+Reis is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).
