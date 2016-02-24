@@ -3,7 +3,11 @@
   
 **Reis** is a cross-platform 2D game engine writen in C++/SDL.  
   
-Refactoring code since *February*, 2016.  Doxygen available [here](http://marcelomesmo.github.io/Reis-doxygen/html/index.html). Lib available [here]().  
+Refactoring code since *February*, 2016.  
+  
+See the [Wiki](https://github.com/marcelomesmo/Reis/wiki) for full documentation, examples and other information.  
+Doxygen available [here](http://marcelomesmo.github.io/Reis-doxygen/html/index.html).  
+Download most recent Lib version [here]().  
   
 Current version 0.0.1 - February, 2016.  
   
