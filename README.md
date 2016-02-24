@@ -36,6 +36,12 @@ Added multiple controller support.
 Changed name from Raiz to **Reis**.  
 Added [doxygen](http://marcelomesmo.github.io/Reis-doxygen/html/index.html) and icon.  
 
+23/02/2016  
+Created [Wiki](https://github.com/marcelomesmo/Reis/wiki).  
+Added Install Guide to Wiki.  
+Added How to Use - Create Game to Wiki.  
+  
+*Decided on making smaller but faster pushes instead of big but slow ones*  
   
   </br>
 Feel free to make contributions.  
