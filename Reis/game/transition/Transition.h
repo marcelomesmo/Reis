@@ -4,7 +4,7 @@
 #include "../Game.h"
 
 /**
- * @brief      A simple interface for the Transition between two GameStates.
+ * @brief      A simple interface for the Transition between two Scenes.
  * 
  * @author     marcelomesmo
  */
@@ -21,13 +21,13 @@ public:
 	 */
 	virtual void update(Game* game, float delta) = 0;
 	/**
-	 * @brief      Render the Transition before the current GameState rendering.
+	 * @brief      Render the Transition before the current Scene rendering.
 	 *
 	 * @param      g     The Graphics context to use for rendering.
 	 */
 	virtual void preRender(Graphics& g) = 0;
 	/**
-	 * @brief      Render the Transition after the current GameState rendering.
+	 * @brief      Render the Transition after the current Scene rendering.
 	 *
 	 * @param      g     The Graphics context to use for rendering.
 	 */

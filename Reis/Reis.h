@@ -29,19 +29,22 @@ misrepresented as being the original software.
 */
 #ifndef _REIS_H
 #define _REIS_H
-/*
+
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib") 
 #pragma comment(lib, "SDL2_image.lib")
 #pragma comment(lib, "SDL2_ttf.lib") 
 #pragma comment(lib, "SDL2_mixer.lib") 
-*/
+
 #include "game\Game.h"
-#include "game\GameState.h"
+#include "game\Scene.h"
 #include "data\Timer.h"
 #include "graphics\Graphics.h"
 #include "graphics\Color.h"
+#include "graphics\ColorManager.h"
 #include "graphics\font\Font.h"
+#include "graphics\image\Sprite.h"
+#include "graphics\image\SpriteSheet.h"
 #include "game\transition\Transition.h"
 #include "game\transition\FadeIn.h"
 #include "game\transition\FadeOut.h"

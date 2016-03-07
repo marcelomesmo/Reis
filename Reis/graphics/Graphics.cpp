@@ -1,7 +1,8 @@
 #include "Graphics.h"
+#include "image\Sprite.h"
 
-SDL_Window* janela;
-SDL_Renderer* renderer;
+//SDL_Window* janela;
+SDL_Renderer* Graphics::renderer;
 //TTF_Font* font;
 
 void Graphics::init(const char* title, int width, int height, bool set_fullscreen)
@@ -102,6 +103,7 @@ void Graphics::end()
 	//printf("Success close batch\n");
 }
 
+
 // Draw String with current font.
 void Graphics::drawString(int x, int y, std::string text)
 {
@@ -128,7 +130,7 @@ void Graphics::drawString(int x, int y, std::string text)
 	fontTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
 	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, textSurface->w, textSurface->h };
+	graphicsBox = { x, y, textSurface->w, textSurface->h };
 
 	//Get rid of old surface
 	SDL_FreeSurface(textSurface);
@@ -137,7 +139,7 @@ void Graphics::drawString(int x, int y, std::string text)
 	SDL_SetTextureAlphaMod(fontTexture, cor.a);
 
 	//Render to screen
-	SDL_RenderCopyEx(renderer, fontTexture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, fontTexture, NULL, &graphicsBox, 0.0, NULL, SDL_FLIP_NONE);
 }
 // Draw String with temporary Font.
 void Graphics::drawString(Font* temp_font, int x, int y, std::string text)
@@ -165,7 +167,7 @@ void Graphics::drawString(Font* temp_font, int x, int y, std::string text)
 	fontTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
 	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, textSurface->w, textSurface->h };
+	graphicsBox = { x, y, textSurface->w, textSurface->h };
 
 	//Get rid of old surface
 	SDL_FreeSurface(textSurface);
@@ -174,7 +176,7 @@ void Graphics::drawString(Font* temp_font, int x, int y, std::string text)
 	SDL_SetTextureAlphaMod(fontTexture, cor.a);
 
 	//Render to screen
-	SDL_RenderCopyEx(renderer, fontTexture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, fontTexture, NULL, &graphicsBox, 0.0, NULL, SDL_FLIP_NONE);
 }
 // Draw parts of the String
 void Graphics::drawString(int x, int y, std::string text, int startIndex, int endIndex)
@@ -522,6 +524,9 @@ void Graphics::setColor(Color c, Uint8 alpha)
 	case Color::BLUE:
 		cor.r = 0; cor.g = 0; cor.b = 255;
 		break;
+	case Color::CYAN:
+		cor.r = 0; cor.g = 255; cor.b = 255;
+		break;
 	case Color::ORANGE:
 		cor.r = 255; cor.g = 165; cor.b = 0;
 		break;
@@ -577,6 +582,9 @@ void Graphics::setBgColor(Color c, Uint8 alpha)
 		break;
 	case Color::BLUE:
 		bgColor.r = 0; bgColor.g = 0; bgColor.b = 255;
+		break;
+	case Color::CYAN:
+		bgColor.r = 0; bgColor.g = 255; bgColor.b = 255;
 		break;
 	case Color::ORANGE:
 		bgColor.r = 255; bgColor.g = 165; bgColor.b = 0;

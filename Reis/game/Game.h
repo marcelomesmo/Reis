@@ -9,13 +9,13 @@ using namespace std;
 #include "../input/Input.h"
 #include "../data/Timer.h"
 
-/// GameState foward declaration to resolve circular depedency.
-class GameState;
+/// Scene foward declaration to resolve circular depedency.
+class Scene;
 /// Fade foward declaration to resolve circular dependency.
 class Transition;
 
 /**
- * @brief      The main game class that implements GameStates stack, Graphics rendering and Input management. Must exist in any game being developed. 
+ * @brief      The main game class that implements stage scene/game state stacks, Graphics rendering and Input management. Must exist in any game being developed. 
  * 
  * @author     marcelomesmo
  */
@@ -25,34 +25,34 @@ class Game
 public:
 
 	/**
-	 * @brief      Init Game window and Graphics.
+	 * @brief      Create a new Game.
 	 *
 	 * @param[in]  title       Game window's title.
 	 * @param[in]  width       Screen width.
 	 * @param[in]  height      Screen height.
 	 * @param[in]  fullscreen  Set fullscreen mode.
 	 */
-	void init(const char* title, int width = 640, int height = 480, 
+	void create(const char* title, int width = 640, int height = 480, 
 		bool fullscreen = false, bool capFrame = true);
 	/**
-	 * @brief      Clear the Game.
+	 * @brief      Clear the Game and finish.
 	 */
-	void free();
+	void end();
 
 	/**
-	 * @brief      Init the list of GameStates.
+	 * @brief      Init the list of Scenes.
 	 *
-	 * @param[in]  allStatesHere  A std::vector of GameStates.
+	 * @param[in]  allScenesHere  A std::vector of Scenes.
 	 */
-	void initStateList(vector<GameState*> allStatesHere);
+	void prepareScenes(vector<Scene*> allScenesHere);
 	/**
-	 * @brief      Enter a specified GameState.
+	 * @brief      Enter a specified Scene.
 	 *
-	 * @param[in]  id     The ID of the GameState to enter.
-	 * @param      leave  The transition used when leaving the current state.
-	 * @param      enter  The transition used when entering the new game state.
+	 * @param[in]  id     The ID of the Scene to enter.
+	 * @param      leave  The transition used when leaving the current scene.
+	 * @param      enter  The transition used when entering the new game scene.
 	 */
-	void enterState(int id, Transition* leave = NULL, Transition* enter = NULL);
+	void enterScene(int id, Transition* leave = NULL, Transition* enter = NULL);
 
 	/**
 	 * @brief      Start running the Game.
@@ -93,21 +93,21 @@ private:
 	void capFrameRate();
 
 	/**
-	 * @brief      Changes the GameState in the stack.
+	 * @brief      Changes the Scene in the stack.
 	 *
-	 * @param      state  Target GameState.
+	 * @param      scene  Target Scene.
 	 */
-	void changeState(GameState* state);
+	void changeScene(Scene* scene);
 	/**
-	 * @brief      Push GameState in the stack.
+	 * @brief      Push Scene in the stack.
 	 *
-	 * @param      state  New GameState.
+	 * @param      scene  New Scene.
 	 */
-	void pushState(GameState* state);
+	void pushScene(Scene* scene);
 	/**
-	 * @brief      Pops GameState from the stack.
+	 * @brief      Pops Scene from the stack.
 	 */
-	void popState();
+	void popScene();
 
 	/**
 	 * @brief      Check if Game is running to continue the game loop.
@@ -117,29 +117,29 @@ private:
 	bool isRunning();
 
 	/**
-	 * @brief      Update current GameState.
+	 * @brief      Update current Scene.
 	 */
 	void update();
 	/**
-	 * @brief      Render current GameState.
+	 * @brief      Render current Scene.
 	 */
 	void render();
 
 	/**
-	 * List of GameStates.
+	 * List of Scenes.
 	 */
-	vector<GameState*> statesList;
+	vector<Scene*> scenesList;
 
 	/**
-	 * List of current GameStates in the stack.
+	 * List of current Scenes in the stack.
 	 */
-	vector<GameState*> states;
+	vector<Scene*> scenes;
 
-	/** The transition being used to enter the state */
+	/** The transition being used to enter the scene */
 	Transition* enterTransition;
-	/** The transition being used to leave the state */
+	/** The transition being used to leave the scene */
 	Transition* leaveTransition;
-	int nextState;
+	int nextScene;
 
 	// Check if Game is running and operative. :)
 	bool running;

@@ -6,9 +6,39 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "Color.h"
+#include "ColorManager.h"
 
-#include "font/Font.h"
+#include "font\Font.h"
+
+/** @enum mapper::Flip
+ * @author     marcelomesmo
+ * @ingroup    Graphics
+ * @brief      A simple strongly typed enum represeting image Flips. Currently 3
+ *             (three) types defined inside Graphics.
+ */
+enum class Flip
+{
+	NONE = SDL_FLIP_NONE,
+	VERTICAL = SDL_FLIP_VERTICAL,
+	HORIZONTAL = SDL_FLIP_HORIZONTAL
+};
+
+/** @enum mapper::Blend
+ * @author     marcelomesmo
+ * @ingroup    Graphics
+ * @brief      A simple strongly typed enum represeting image Blend. Currently 3
+ *             (three) types defined inside Graphics.
+ */
+enum class Blend
+{
+	NONE = SDL_BLENDMODE_NONE,
+	ADD = SDL_BLENDMODE_ADD,
+	BLEND = SDL_BLENDMODE_BLEND,
+	MOD = SDL_BLENDMODE_MOD
+};
+
+/// Sprite foward declaration to resolve circular dependency.
+class Sprite;
 
 /**
  * @brief      Graphics context used to create game window and rendering.
@@ -213,17 +243,18 @@ public:
 	 */
 	int getHeight();
 
-	// TODO - Resize
-	// 
-	// TODO - drawImage
+	// TODO - Resize Window
+	//
 
+	/// Game window renderer.
+	static SDL_Renderer* renderer;
 private:
 
 	/**
 	 * The window we'll be rendering to.
 	 */
 	SDL_Window* janela;
-	SDL_Renderer* renderer;
+	//SDL_Renderer* renderer;
 	int width;
 	int height;
 

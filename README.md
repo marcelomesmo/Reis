@@ -43,6 +43,20 @@ Added How to Use - Create Game to Wiki.
   
 *Decided on making smaller but faster pushes instead of big but slow ones*  
   
+07/03/2016  
+Changed class name from GameState to Scene.  
+Added Sprite to Graphics.  
+Added SpriteSheet to Graphics.  
+Changed a lot of .init()/.load() to .create().  
+Changed a lot of .free() to .end().  
+Added ColorManager to Graphics.  
+Added print key to string functionality to Input.  
+  
+Added How to Use - Scene to Wiki.  
+Added example images to Wiki tutorials.  
+  
+*Took back on making smaller but faster pushes due to lack of time. Making bigger slow pushes again*  
+  
   </br>
 Feel free to make contributions.  
 If you encounter any bugs, please send me an email.  

@@ -4,19 +4,21 @@
 /** @enum mapper::Color
 *  \author marcelomesmo
 *  \ingroup Graphics
-*  @brief A simple strongly typed enum represeting game Colors. Currently 9 (nine) no-alpha colours defined inside Graphics.
+*  @brief A simple strongly typed enum represeting game Colors. Currently 11 (eleven) no-alpha colours defined inside Graphics.
 */
-enum class Color 
-{ 
+enum class Color
+{
 	WHITE,
 	BLACK,
 	RED,
 	GREEN,
 	BLUE,
+	CYAN,
 	YELLOW,
 	ORANGE,
 	BROWN,
-	PURPLE
+	PURPLE,
+	PINK
 };
 
 #endif

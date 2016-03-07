@@ -2,13 +2,15 @@
 
 FadeIn::FadeIn(Color c)
 {
-	this->setColor(c);
+	cor = ColorManager::getColor(c);
+	cor.a = 255;
 	fadeTime = 500;
 	alpha = 255;
 }
 FadeIn::FadeIn(Color c, Uint32 time)
 {
-	this->setColor(c);
+	cor = ColorManager::getColor(c);
+	cor.a = 255;
 	fadeTime = time;
 	alpha = 255;
 }
@@ -42,38 +44,6 @@ bool FadeIn::isFinished()
 
 void FadeIn::setColor(Color c, Uint8 alpha)
 {
+	cor = ColorManager::getColor(c);
 	cor.a = alpha;
-
-	switch (c) {
-	case Color::WHITE:
-		cor.r = 255; cor.g = 255; cor.b = 255;
-		break;
-	case Color::BLACK:
-		cor.r = 0; cor.g = 0; cor.b = 0;
-		break;
-	case Color::RED:
-		cor.r = 255; cor.g = 0; cor.b = 0;
-		break;
-	case Color::GREEN:
-		cor.r = 0; cor.g = 255; cor.b = 0;
-		break;
-	case Color::BLUE:
-		cor.r = 0; cor.g = 0; cor.b = 255;
-		break;
-	case Color::ORANGE:
-		cor.r = 255; cor.g = 165; cor.b = 0;
-		break;
-	case Color::BROWN:
-		cor.r = 184; cor.g = 134; cor.b = 11;
-		break;
-	case Color::YELLOW:
-		cor.r = 255; cor.g = 255; cor.b = 0;
-		break;
-	case Color::PURPLE:
-		cor.r = 128; cor.g = 0; cor.b = 128;
-		break;
-	default:
-		printf("Invalid color.");
-		break;
-	}
 }

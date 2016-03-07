@@ -22,7 +22,7 @@ public:
 	 * @brief      Clear inputs. Internal use only, don't call this method.
 	 */
 	void free();
-
+	
 	/**
 	 * @brief      Update input entries. Internal use only, don't call this method.
 	 */
@@ -391,6 +391,13 @@ public:
 	 * @return     True if controller is locked.
 	 */
 	bool isLocked(int controller);
+
+	/**
+	 * @brief      Get a String for the the currently pressed key.
+	 *
+	 * @return     String for the key pressed.
+	 */
+	std::string getKeyString();
 
 private:
 

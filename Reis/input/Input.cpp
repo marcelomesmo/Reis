@@ -570,6 +570,24 @@ void Input::keyToString(SDL_Scancode key)
 	}
 }
 
+std::string Input::getKeyString()
+{
+	for (auto const key : keyPressed)
+	{
+		if (keyPressed[key.first])
+		{
+			// Check if is printable
+			if ((key.first >= SDL_SCANCODE_A) && (key.first <= SDL_SCANCODE_0))
+			{
+				std::string a = SDL_GetScancodeName(key.first);
+				//printf("key %s\n", a.c_str());
+				return a;
+			}
+		}
+	}
+	return "";
+}
+
 // Controller to String, pode ser util deixar aqui
 char* Input::MouseButtonName(const Uint8 button)
 {

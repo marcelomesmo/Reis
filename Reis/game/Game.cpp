@@ -1,8 +1,8 @@
 #include "Game.h"
-#include "GameState.h"
+#include "Scene.h"
 #include "transition/Transition.h"
 
-void Game::init(const char* title, int width, int height, bool set_fullscreen, bool capFrame)
+void Game::create(const char* title, int width, int height, bool set_fullscreen, bool capFrame)
 {
 	g.init(title, width, height, set_fullscreen);
 	fullscreen = set_fullscreen;
@@ -12,7 +12,7 @@ void Game::init(const char* title, int width, int height, bool set_fullscreen, b
 	// leaveTRansition
 	leaveTransition = NULL;
 	enterTransition = NULL;
-	nextState = 0;
+	nextScene = 0;
 
 	doCapFrame = capFrame;
 	screenTargetFPS = 60;
@@ -30,12 +30,12 @@ void Game::init(const char* title, int width, int height, bool set_fullscreen, b
 
 }
 
-void Game::free()
+void Game::end()
 {
-	// Clean up all States.
-	while (!states.empty()) {
-		states.back()->free();
-		states.pop_back();
+	// Clean up all Scenes.
+	while (!scenes.empty()) {
+		scenes.back()->end();
+		scenes.pop_back();
 	}
 
 	// Clean up Input
@@ -49,22 +49,22 @@ void Game::free()
 	printf("Game Cleanup\n");
 }
 
-// Init a list of all states with ID from 0 to allStatesHere.size-1
-void Game::initStateList(vector<GameState*> allStatesHere)
+// Init a list of all scenes with ID from 0 to allScenesHere.size-1
+void Game::prepareScenes(vector<Scene*> allScenesHere)
 {
-	statesList = allStatesHere;
-	cout << "Number of states: " << statesList.size() << " \n";
+	scenesList = allScenesHere;
+	cout << "Number of scenes: " << scenesList.size() << " \n";
 }
-// Push the state by ID
-void Game::enterState(int id, Transition* leave, Transition* enter)
+// Push the scene by ID
+void Game::enterScene(int id, Transition* leave, Transition* enter)
 {
 	// Se o ID for incorreto nao muda
-	if ((unsigned)id >= this->statesList.size()) cout << "Invalid state ID\n";
+	if ((unsigned)id >= this->scenesList.size()) cout << "Invalid scene ID\n";
 	// Se o ID for correto muda de estado
 	else
 	{
-		// Pega o ID do proximo state
-		nextState = id;
+		// Pega o ID do proximo scene
+		nextScene = id;
 
 		// Se tiver FadeIn e ja nao estiver em transicao
 		if (enter != NULL)
@@ -79,66 +79,66 @@ void Game::enterState(int id, Transition* leave, Transition* enter)
 			leaveTransition = leave;
 		}
 		// Se nao, muda automaticamente
-		else changeState(statesList[id]);
+		else changeScene(scenesList[id]);
 	}
 }
 
-void Game::changeState(GameState* state)
+void Game::changeScene(Scene* scene)
 {
-	// Clean up the current State.
-	if (!states.empty()) {
-		states.back()->free();
-		states.pop_back();
+	// Clean up the current Scene.
+	if (!scenes.empty()) {
+		scenes.back()->end();
+		scenes.pop_back();
 	}
 
 	// Reset Graphics to original Font and Color config
 	g.reset();
-	// This is intended to avoid Font and Color/BgColor changes persistence between GameStates
-	// Reset Input to original state (empty)
+	// This is intended to avoid Font and Color/BgColor changes persistence between Scenes
+	// Reset Input to original scene (empty)
 	input.clear();
-	// This is intended to avoid key presses persistence between GameStates
+	// This is intended to avoid key presses persistence between Scenes
 
-	// store and init the new state
-	states.push_back(state);
-	states.back()->init(this);
+	// store and init the new scene
+	scenes.push_back(scene);
+	scenes.back()->init(this);
 }
 
-void Game::pushState(GameState* state)
+void Game::pushScene(Scene* scene)
 {
-	// pause current state
-	if (!states.empty()) {
-		states.back()->pause();
+	// pause current scene
+	if (!scenes.empty()) {
+		scenes.back()->pause();
 	}
 
-	// store and init the new state
-	states.push_back(state);
-	states.back()->init(this);
+	// store and init the new scene
+	scenes.push_back(scene);
+	scenes.back()->init(this);
 }
 
-void Game::popState()
+void Game::popScene()
 {
-	// cleanup the current state
-	if (!states.empty()) {
-		states.back()->free();
-		states.pop_back();
+	// cleanup the current scene
+	if (!scenes.empty()) {
+		scenes.back()->end();
+		scenes.pop_back();
 	}
 
-	// resume previous state
-	if (!states.empty()) {
-		states.back()->resume();
+	// resume previous scene
+	if (!scenes.empty()) {
+		scenes.back()->resume();
 	}
 }
 
 void Game::start()
 {
-	// Start first State
-	if (statesList.size() != 0)
+	// Start first Scene
+	if (scenesList.size() != 0)
 	{
-		changeState(statesList[0]);
-		//printf("Early game, loading first state\n");
+		changeScene(scenesList[0]);
+		//printf("Early game, loading first scene\n");
 	}
 	else {
-		printf("Error ocurred in initialization while loading first GameState."); 
+		printf("Error ocurred in initialization while loading first Scene.\n"); 
 		quit();
 	}
 
@@ -171,8 +171,8 @@ void Game::update()
 		leaveTransition->update(this, delta);
 		if (leaveTransition->isFinished())
 		{
-			//printf("finished LEAVE transition, loading state\n");
-			changeState(statesList[nextState]);
+			//printf("finished LEAVE transition, loading scene\n");
+			changeScene(scenesList[nextScene]);
 			delete leaveTransition;
 			leaveTransition = NULL;
 		}
@@ -186,17 +186,17 @@ void Game::update()
 		enterTransition->update(this, delta);
 		if (enterTransition->isFinished())
 		{
-			//printf("finished ENTER transition, state fully loaded\n");
+			//printf("finished ENTER transition, scene fully loaded\n");
 			delete enterTransition;
 			enterTransition = NULL;
 		}
 		else
 			return;
-		// Only updates state if enterTransition has finished (stop going on above 'return')
+		// Only updates scene if enterTransition has finished (stop going on above 'return')
 	}
 
-	// Let the current State update the game.
-	states.back()->update(this, input, delta);
+	// Let the current Scene update the game.
+	scenes.back()->update(this, input, delta);
 }
 
 void Game::render()
@@ -208,8 +208,8 @@ void Game::render()
 	if (leaveTransition != NULL) leaveTransition->preRender(g);
 	else if (enterTransition != NULL) enterTransition->preRender(g);
 
-	// Let the current state draw the screen
-	states.back()->render(this, g);
+	// Let the current scene draw the screen
+	scenes.back()->render(this, g);
 
 	// Operate transitions (Post Render)
 	if (leaveTransition != NULL) leaveTransition->postRender(g);
@@ -224,7 +224,7 @@ void Game::capFrameRate()
 	// give PC a break (opt)
 	if (doCapFrame)
 	{
-		frameTicks = capTimer.getTicks();		// gets how long did it take to update() gamestates
+		frameTicks = capTimer.getTicks();		// gets how long did it take to update() Scenes
 		if (frameTicks < screenTicksPerFrame)
 		{
 			//Wait remaining time

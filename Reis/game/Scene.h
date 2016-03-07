@@ -1,5 +1,5 @@
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef GAMESCENE_H
+#define GAMESCENE_H
 
 #include "Game.h"
 
@@ -8,41 +8,41 @@
  * 
  * @author     marcelomesmo
  */
-class GameState
+class Scene
 {
 
 public:
 	/**
-	 * @brief      Inits the GameState. Should include objects and variables initialization. It's called before the game loop starts.
+	 * @brief      Inits the Scene. Should include objects and variables initialization. It's called before the game loop starts.
 	 *
-	 * @param      game  The Game object application in which the GameState is hosted.
+	 * @param      game  The Game object application in which the Scene is hosted.
 	 */
 	virtual void init(Game* game) = 0;
 	/**
-	 * @brief      Clear the GameState.
+	 * @brief      Clear the Scene and finish.
 	 */
-	virtual void free() = 0;
+	virtual void end() = 0;
 
 	/**
-	 * @brief      Pause the GameState.
+	 * @brief      Pause the Scene.
 	 */
 	virtual void pause() = 0;
 	/**
-	 * @brief      Unpause the GameState.
+	 * @brief      Unpause the Scene.
 	 */
 	virtual void resume() = 0;
 
 	/**
-	 * @brief      Updates the GameState. Should include input handling, IA logic and physics.
+	 * @brief      Updates the Scene. Should include input handling, IA logic and physics.
 	 *
-	 * @param      game   The Game object application in which the GameState is hosted.
+	 * @param      game   The Game object application in which the Scene is hosted.
 	 * @param[in]  delta  The amount of time in milliseconds since last update.
 	 */
 	virtual void update(Game* game, Input& input, float delta) = 0;
 	/**
-	 * @brief      Render the GameState. Render the game's screen here.
+	 * @brief      Render the Scene. Render the game's screen here.
 	 *
-	 * @param      game  The Game object application in which the GameState is
+	 * @param      game  The Game object application in which the Scene is
 	 *                   hosted.
 	 * @param      g     The Graphics context to use for rendering.
 	 */

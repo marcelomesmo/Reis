@@ -33,13 +33,13 @@ public:
 	 */
 	void update(Game* game, float delta);
 	/**
-	 * @brief      Render the Transition before the current GameState rendering.
+	 * @brief      Render the Transition before the current Scene rendering.
 	 *
 	 * @param      g     The Graphics context to use for rendering.
 	 */
 	void preRender(Graphics& g);
 	/**
-	 * @brief      Render the Transition after the current GameState rendering.
+	 * @brief      Render the Transition after the current Scene rendering.
 	 *
 	 * @param      g     The Graphics context to use for rendering.
 	 */
