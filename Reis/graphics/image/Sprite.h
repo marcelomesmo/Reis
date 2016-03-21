@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include "../Graphics.h"
+#include "SpriteSheet.h"
 
 /**
  * @brief      Create a new Sprite image.
@@ -17,7 +18,6 @@ class Sprite
 {
 public:
 	Sprite(std::string path, Color transparent = Color::CYAN);
-	Sprite(Sprite* spriteFromSheet);
 	Sprite();
 	~Sprite();
 	
@@ -36,17 +36,45 @@ public:
 	 */
 	bool create(std::string path, Color transparent = Color::CYAN);
 	/**
+	  * @brief      Create a new Sprite object.
+	  *
+	  *             Load an image from a SpriteSheet's Sprite.
+	  *
+	  * @param      sheet  SpriteSheet used to get the Sprite.
+	  * @param[in]  count  Sprite position in the Sprite Sheet.
+	  *
+	  * @return     True if loaded successfully.
+	  */	
+	bool create(SpriteSheet* sheet, int count);
+	/**
 	 * @brief      Create a new Sprite object.
 	 *
 	 *             Load an image from a SpriteSheet's Sprite.
 	 *
-	 * @param      spriteFromSheet  Sprite from SpriteSheet.
+	 * @param      sheet      SpriteSheet used to get the Sprite.
+	 * @param[in]  sheetPosX  The X position of the cell on the SpriteSheet.
+	 * @param[in]  sheetPosY  The Y position of the cell on the SpriteSheet.
 	 *
 	 * @return     True if loaded successfully.
-	 */	
-	bool create(Sprite* spriteFromSheet);
+	 */
+	bool create(SpriteSheet* sheet, int sheetPosX, int sheetPosY);
+	/**
+	  * @brief      Create a new Sprite object.
+	  *
+	  *             Load an image from a SpriteSheet's XML. Beware: Internal Use
+	  *             Only.
+	  *
+	  * @param      sheet  SpriteSheet used to get the Sprite.
+	  * @param      clip   Sprite clip from the XML.
+	  *
+	  * @return     True if loaded successfully.
+	  */	
+	bool create(SpriteSheet* sheet, SDL_Rect* clip);
 	/**
 	 * @brief      Deallocates Sprite after use.
+	 *
+	 *             Notice: Take care while using, will also deallocate any
+	 *             SpriteSheet referenced by this Sprite.
 	 */
 	void free();
 
@@ -123,6 +151,31 @@ public:
 	 * @return     Sprite image Height.
 	 */
 	int getHeight();
+	/**
+	* @brief      Gets image Anchor X position.
+	*
+	* @return     Sprite image Anchor X.
+	*/
+	int getAnchorX();
+	/**
+	* @brief      Gets image Anchor Y position.
+	*
+	* @return     Sprite image Anchor Y.
+	*/
+	int getAnchorY();
+
+	/**
+	 * @brief      Set Anchor X position to draw the image.
+	 *
+	 * @param[in]  x     Anchor X position.
+	 */
+	void setAnchorX(int x);
+	/**
+	 * @brief      Set Anchor Y position to draw the image.
+	 *
+	 * @param[in]  y     Anchor Y position.
+	 */
+	void setAnchorY(int y);
 
 	/* Vai usar isso quando fizer BITMAP font
 
@@ -143,9 +196,9 @@ public:
 	SDL_Texture* getImage();
 	float getAngle();
 	SDL_Rect* getClip();
-	SDL_Point* getCenter();
+	//SDL_Point* getCenter();
 
-private:
+protected:
 
 	//The actual hardware texture
 	SDL_Texture* image;
@@ -160,6 +213,10 @@ private:
 	float scaleX;
 	float scaleY;
 
+	//Anchor positions
+	int anchorX;
+	int anchorY;
+
 	/// Which part of the image is printed onscreen.
 	//
 	//	Normally it's the whole image, but you can clip()
@@ -167,6 +224,8 @@ private:
 	SDL_Rect* clipRect;
 	// Auxiliar rect for drawing
 	SDL_Rect graphicsBox;
+
+	bool fromSheet;
 };
 
 #endif

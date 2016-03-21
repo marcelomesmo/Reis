@@ -1,5 +1,4 @@
 #include "Graphics.h"
-#include "image\Sprite.h"
 
 //SDL_Window* janela;
 SDL_Renderer* Graphics::renderer;

@@ -2,7 +2,8 @@
 #define SPRITESHEET_H
 
 #include <vector>
-#include "Sprite.h"
+#include "../Graphics.h"
+#include "../../data/xml/MuSSEXmlParser.h"
 
 /**
  * @brief      Create a new SpriteSheet.
@@ -13,7 +14,6 @@ class SpriteSheet
 {
 public:
 	SpriteSheet(std::string path, int sprite_width, int sprite_height, Color transparent = Color::CYAN);
-	SpriteSheet(std::string path, std::string musse_xml_path);
 	SpriteSheet();
 	/**
 	 * @brief      Create a new SpriteSheet in which Sprites have the same size
@@ -28,18 +28,18 @@ public:
 	 */
 	bool create(std::string path, int sprite_width, int sprite_height, Color transparent = Color::CYAN);
 	/**
-	 * @brief      Create a new SpriteSheet in which Sprites have different
-	 *             sizes (in width and height). Read meta-data saved in a Xml
-	 *             file.
-	 *
-	 *             Supports: MuSSE (Multisized SpriteSheet Exporter at
-	 *             https://github.com/marcelomesmo/MuSSE).
-	 *
-	 * @param[in]  path            Image file path.
-	 * @param[in]  musse_xml_path  Xml file path.
-	 *
-	 * @return     True if created successfully.
-	 */
+	* @brief      Create a new SpriteSheet in which Sprites have different
+	*             sizes (in width and height). Read meta-data saved in a Xml
+	*             file.
+	*
+	*             Supports: MuSSE (Multisized SpriteSheet Exporter at
+	*             https://github.com/marcelomesmo/MuSSE).
+	*
+	* @param[in]  path            Image file path.
+	* @param[in]  musse_xml_path  Xml file path.
+	*
+	* @return     True if created successfully.
+	*/
 	bool create(std::string path, std::string musse_xml_path);
 
 	~SpriteSheet();
@@ -51,50 +51,15 @@ public:
 	 */
 	void free();
 
-	/**
-	 * @brief      Get a Sprite from the SpriteSheet by its ordered position
-	 *             cell in the sheet. Sprites are ordered and counted based on
-	 *             the total amount of sprites in that sheet i.e. the tenth
-	 *             Sprite in the sheet is counted as Sprite number 10, the
-	 *             second is Sprite number 2, etc.
-	 *
-	 *			   imgs on a sheet	
-	 *             0  1  2  3 
-	 *             4  5  6	7 
-	 *             8  9  10 11 
-	 *             sheet ordered count
-	 *
-	 * @param[in]  count  A ordered count position cell of the Sprite in the
-	 *                    sheet based on the total amount of sprites.
-	 *
-	 * @return     A Sprite from the specified sheet location.
-	 */
-	Sprite* getSpriteAt(int count);
-	/**
-	 * @brief      Get a Sprite from the SpriteSheet by its x,y position cell in
-	 *             the sheet. Sprites cell is defined as follows:
-	 *
-	 * 				sheet pos X --->
-	 * 				_____________________
-	 * 				| 0,0  1,0  2,0  3,0 |   |					0  1  2  3
-	 * 				| 0,1  1,1  2,1  3,1 |	 | sheet pos Y		4  5  6	 7
-	 * 				|_0,2__1,2__2,2__3,2_|   v				    8  9  10 11
-	 *   			imgs on a sheet								sheet ordered count
-	 *
-	 * @param[in]  sheetPosX  The X position of the cell on the SpriteSheet.
-	 * @param[in]  sheetPosY  The Y position of the cell on the SpriteSheet.
-	 *
-	 * @return     A Sprite from the specified sheet location.
-	 */
-	Sprite* getSpriteAt(int sheetPosX, int sheetPosY);
+	// Get a Sprite clip in x, y position in the SpriteSheet.
+	SDL_Rect* getClip(int sheetPosX, int sheetPosY);
+	// Get a Sprite clip in count position in the SpriteSheet.
+	SDL_Rect* getClip(int count);
+	// Check if an Animation exists in the SpriteSheet.
+	bool clipExist(std::string name);
+	// Get a set of Sprite clips by Animation name from the XML.
+	vector<SDL_Rect*> getClip(std::string name);
 
-	// Pode ser que esses saiam
-	// Por enquanto tao sendo usadas como debug apenas
-	// Gets a sprite clip on the SpriteSheet (by x,y position)
-	SDL_Rect* getSprite(int sheetPosX, int sheetPosY);
-	// Gets a sprite clip on the SpriteSheet (by ordered count)
-	SDL_Rect* getSprite(int count);
-	
 	/**
 	 * @brief      Get a Sprite clip ordered count position based on the Sprite
 	 *             clip x,y position in the sheet.
@@ -106,8 +71,6 @@ public:
 	 */
 	int getSpriteCountByPos(int sheetPosX, int sheetPosY);
 
-	//Sprite& getImage();	
-	
 	/**
 	 * @brief      Return the amount of Sprites on the SpriteSheet.
 	 *
@@ -127,11 +90,40 @@ public:
 	 */
 	int getVerticalCount();
 
+	/**
+	* @brief      Gets image Width dimension.
+	*
+	* @return     Sprite image Width.
+	*/
+	int getWidth();
+	/**
+	* @brief      Gets image Height dimension.
+	*
+	* @return     Sprite image Height.
+	*/
+	int getHeight();
+	/**
+	 * @brief      Get the Sprite Sheet image as a SDL_Texture.
+	 *
+	 * @return     Spriet Sheet image.
+	 */
+	SDL_Texture* getImage();
+
 private:
-	Sprite image;
+	//The actual hardware texture
+	SDL_Texture* image;
+	bool initImage(std::string path, Color transparent = Color::CYAN);
+	void* pixels;
+	int pitch;
+
+	//Image dimensions
+	int width;
+	int height;
 
 	// Used for fixed size Sprite Sheets
 	std::vector<SDL_Rect*> spriteClips;
+	// Used for multi size Sprite Sheets (read from XML)
+	std::vector<pair<std::string, SDL_Rect*>> spriteClipsFromXml;
 	int size;
 	int columns;
 	int lines;

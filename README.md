@@ -1,4 +1,4 @@
-![alt tag](Reis/assets/Reis-logo-small.png)  
+![Reis](Reis/assets/Reis-logo-small.png)  
 # Reis  
   
 **Reis** is a cross-platform 2D game engine writen in C++/SDL.  
@@ -56,6 +56,13 @@ Added How to Use - Scene to Wiki.
 Added example images to Wiki tutorials.  
   
 *Took back on making smaller but faster pushes due to lack of time. Making bigger slow pushes again*  
+  
+20/03/2016  
+Added Animation to Graphics.  
+Added XML support to SpriteSheet.  
+Added MuSSEXmlParser to Data.  
+Changed Sprite creation.  
+Added anchor support to Sprite.  
   
   </br>
 Feel free to make contributions.  

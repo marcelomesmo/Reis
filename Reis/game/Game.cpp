@@ -138,7 +138,7 @@ void Game::start()
 		//printf("Early game, loading first scene\n");
 	}
 	else {
-		printf("Error ocurred in initialization while loading first Scene.\n"); 
+		printf("ERROR: We don't have the first Scene initialization.\n"); 
 		quit();
 	}
 

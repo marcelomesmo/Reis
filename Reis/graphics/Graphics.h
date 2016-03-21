@@ -37,9 +37,6 @@ enum class Blend
 	MOD = SDL_BLENDMODE_MOD
 };
 
-/// Sprite foward declaration to resolve circular dependency.
-class Sprite;
-
 /**
  * @brief      Graphics context used to create game window and rendering.
  * 

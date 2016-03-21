@@ -4,10 +4,6 @@ SpriteSheet::SpriteSheet(std::string path, int sprite_width, int sprite_height, 
 {
 	create(path, sprite_width, sprite_height);
 }
-SpriteSheet::SpriteSheet(std::string path, std::string musse_xml_path)
-{
-	create(path, musse_xml_path);
-}
 SpriteSheet::SpriteSheet()
 {
 }
@@ -17,7 +13,14 @@ SpriteSheet::~SpriteSheet()
 }
 void SpriteSheet::free()
 {
-	image.free();
+	//Free texture if it exists
+	if (image != NULL)
+	{
+		SDL_DestroyTexture(image);
+		image = NULL;
+		width = 0;
+		height = 0;
+	}
 }
 
 	/*
@@ -29,7 +32,7 @@ void SpriteSheet::free()
 bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, Color transparent)
 {
 	// Create a Sprite with specified image path
-	if(!image.create(path, transparent)) return false;
+	if(!initImage(path, transparent)) return false;
 
 	/*	
 		For SpriteSheets with Sprites that have the same size (in width and height):
@@ -43,11 +46,11 @@ bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, 
 	*/
 	this->lines = 0;
 	// Check all lines in the sprite sheet
-	for (int j = 0; j < image.getHeight(); j += sprite_height)
+	for (int j = 0; j < this->height; j += sprite_height)
 	{
 		this->columns = 0;
 		// Check all columns in the sprite sheet
-		for (int i = 0; i < image.getWidth(); i += sprite_width)
+		for (int i = 0; i < this->width; i += sprite_width)
 		{
 			// Get Clip for Sprite in the current position
 			SDL_Rect* clip = new SDL_Rect();
@@ -64,18 +67,35 @@ bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, 
 	}
 	// Get how many Sprites we have in the Sprite Sheet (include empty spaces)
 	this->size = spriteClips.size();
-	printf("Spritesheet %ix%i size: %i\n", lines, columns, size);
+	printf("DEBUG: Spritesheet %ix%i size: %i\n", lines, columns, size);
 	return true;
 }
-
 // Load Sprite Sheets using a XML metadata for the Sprites
 // Supports: MuSSEXmlParser.
 bool SpriteSheet::create(std::string path, std::string musse_xml_path)
 {
+	// Open the parser
+	MuSSEXmlParser parsed_xml;
+	if(!parsed_xml.parseXmlFile(musse_xml_path.c_str())) return false;
 
+	// Create a Sprite with specified image path
+	if (!initImage(path/*parsed_xml.getPath(), parsed_xml.getColorKey()*/)) return false;
+
+	// Get the clips
+	this->spriteClipsFromXml = parsed_xml.getClips();
+	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml) spriteClips.push_back(s.second);
+
+	this->size = spriteClipsFromXml.size();
+
+	// Couldn't read animations
+	if (this->size <= 0) {
+		printf("ERROR: Couldn't get clips for Animations from XML.\n");
+		return false;
+	}
+
+	printf("DEBUG: Spritesheet %s size: %i\n", parsed_xml.getName().c_str(), size);
 	return true;
 }
-
 
 /*
 *		    *************************************
@@ -96,72 +116,153 @@ bool SpriteSheet::create(std::string path, std::string musse_xml_path)
 	|_0,2__1,2__2,2__3,2_|   v				    8  9  10 11
 	imgs on a sheet								sheet ordered count
 */
-SDL_Rect* SpriteSheet::getSprite(int sheetPosX, int sheetPosY)
+SDL_Rect* SpriteSheet::getClip(int sheetPosX, int sheetPosY)
 {
 	int count = getSpriteCountByPos(sheetPosX, sheetPosY);
 	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("invalid sprite frame position %i \n", count);
+		printf("ERROR: Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	printf("Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
+	printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
-SDL_Rect* SpriteSheet::getSprite(int count)
+SDL_Rect* SpriteSheet::getClip(int count)
 {
 	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("invalid sprite frame position %i \n", count);
+		printf("ERROR: Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	printf("Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
+	printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
-int SpriteSheet::getSpriteCountByPos(int sheetPosX, int sheetPosY)
+vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
 {
-	return sheetPosX + (sheetPosY * columns);
-}
+	vector<SDL_Rect*> novo;
 
-
-Sprite* SpriteSheet::getSpriteAt(int count)
-{
-	// Check if Sprite position is valid
-	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("invalid sprite cell position %i \n", count);
-		return NULL;
+	for (pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
+	{
+		if (s.first == name){
+			novo.push_back(s.second);
+		}
 	}
-	// Get a reference for this SpriteSheet image.
-	Sprite* novo = &image;
-	// Define this Sprite's Clip based on the image position in sheet.
-	novo->clip(spriteClips[count]);
-	// Return the new created Sprite
+
+	printf("DEBUG: Clips for Animation %s returned. Frames Quantity: %d \n", name.c_str(), novo.size());
 	return novo;
 }
-Sprite* SpriteSheet::getSpriteAt(int sheetPosX, int sheetPosY)
-{	
-	// Check if Sprite position is valid
-	int count = getSpriteCountByPos(sheetPosX, sheetPosY);
-	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("invalid sprite x %i y %i position at cell %i \n", sheetPosX, sheetPosY, count);
-		return NULL;
+bool SpriteSheet::clipExist(std::string name)
+{
+	// Check if Sprite Sheet has been read from Xml
+	if (spriteClipsFromXml.size() <= 0) {
+		printf("ERROR: Sprite Sheet ain't loaded from Xml or error occurred while loading animations.\n");
+		return false;
 	}
-	// Get a reference for this SpriteSheet image.
-	Sprite* novo = &image;
-	// Define this Sprite's Clip based on the image position in sheet.
-	novo->clip(spriteClips[count]);
-	// Return the new created Sprite
-	return novo;
+
+	// Check if theres a animation with that name
+	bool hasAnim = false;
+	for (pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
+	{
+		if (s.first == name){
+			hasAnim = true;
+			break;
+		}
+	}
+	if (!hasAnim) {
+		printf("ERROR: There is no Animation with name %s.\n", name.c_str());
+		return false;
+	}
+	
+	return true;
 }
 
-//Sprite& SpriteSheet::getImage(){ return this->image; }
+int SpriteSheet::getSpriteCountByPos(int sheetPosX, int sheetPosY) { return sheetPosX + (sheetPosY * columns); }
 
-int SpriteSheet::getSpriteCount()
+int SpriteSheet::getSpriteCount() {	return this->size; }
+int SpriteSheet::getHorizontalCount() {	return this->lines; }
+int SpriteSheet::getVerticalCount() { return this->columns; }
+
+int SpriteSheet::getWidth() { return width; }
+int SpriteSheet::getHeight() { return height; }
+SDL_Texture* SpriteSheet::getImage() { return image; }
+
+
+bool SpriteSheet::initImage(std::string path, Color transparent)
 {
-	return this->size;
-}
-int SpriteSheet::getHorizontalCount()
-{
-	return this->lines;
-}
-int SpriteSheet::getVerticalCount()
-{
-	return this->columns;
+	//Get rid of preexisting texture
+	free();
+
+	//The final texture
+	SDL_Texture* newTexture = NULL;
+
+	//Load image at specified path
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL)
+	{
+		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	}
+	else
+	{
+		//Convert surface to display format
+		SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_RGBA8888, NULL);
+		if (formattedSurface == NULL)
+		{
+			printf("Unable to convert loaded surface to display format! %s\n", SDL_GetError());
+		}
+		else
+		{
+			//Create blank streamable texture
+			newTexture = SDL_CreateTexture(Graphics::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h);
+			if (newTexture == NULL)
+			{
+				printf("Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
+			}
+			else
+			{
+				//Enable blending on texture
+				SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
+
+				//Lock texture for manipulation
+				SDL_LockTexture(newTexture, &formattedSurface->clip_rect, &pixels, &pitch);
+
+				//Copy loaded/formatted surface pixels
+				memcpy(pixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
+
+				//Get image dimensions
+				width = formattedSurface->w;
+				height = formattedSurface->h;
+
+				//Get pixel data in editable format
+				Uint32* pixs = (Uint32*)pixels;
+				int pixelCount = (pitch / 4) * height;
+
+				//Map colors
+				SDL_Color colorTransparency = ColorManager::getColor(transparent);
+				Uint32 colorKey = SDL_MapRGB(formattedSurface->format, colorTransparency.r, colorTransparency.g, colorTransparency.b);
+				Uint32 transparency = SDL_MapRGBA(formattedSurface->format, 0x00, 0xFF, 0xFF, 0x00);
+
+				//Color key pixels
+				for (int i = 0; i < pixelCount; ++i)
+				{
+					if (pixs[i] == colorKey)
+					{
+						pixs[i] = transparency;
+					}
+				}
+
+				//Unlock texture to update
+				SDL_UnlockTexture(newTexture);
+				pixels = NULL;
+			}
+
+			//Get rid of old formatted surface
+			SDL_FreeSurface(formattedSurface);
+		}
+
+		//Get rid of old loaded surface
+		SDL_FreeSurface(loadedSurface);
+	}
+
+	//Return success
+	printf("Sucessfully loaded image: %s\n", path.c_str());
+	image = newTexture;
+	return image != NULL;
 }

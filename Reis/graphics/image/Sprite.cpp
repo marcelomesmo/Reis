@@ -4,13 +4,8 @@ Sprite::Sprite(std::string path, Color transparent)
 {
 	create(path, transparent);
 }
-Sprite::Sprite(Sprite* spriteFromSheet)
-{
-	create(spriteFromSheet);
-}
 Sprite::Sprite()
 {
-
 }
 
 Sprite::~Sprite()
@@ -19,29 +14,90 @@ Sprite::~Sprite()
 }
 
 // Load Sprite from a Sprite Sheet sprite
-bool Sprite::create(Sprite* spriteFromSheet)
+bool Sprite::create(SpriteSheet* sheet, int count)
 {
+	fromSheet = true;
+
 	//Get rid of preexisting texture
 	free();
+	// Will erase SpriteSheet image if previously assigned
 
-	if (spriteFromSheet == NULL)
+	if (sheet->getImage() == NULL)
 	{
-		printf("Couldn't get Sprite from SpriteSheet.\n");
+		printf("Error: Couldn't get Sprite from SpriteSheet.\n");
 		return false;
 	}
 
-	image = spriteFromSheet->getImage();
-	clipRect = spriteFromSheet->getClip();
-	width = spriteFromSheet->getClip()->w;
-	height = spriteFromSheet->getClip()->h;
+	image = sheet->getImage();
+	clipRect = sheet->getClip(count);
+	width = clipRect->w;
+	height = clipRect->h;
+
+	anchorX = 0;
+	anchorY = 0;
+
+	return true;
+}
+
+// Load Sprite from a Sprite Sheet sprite with a fixed Clip
+bool Sprite::create(SpriteSheet* sheet, SDL_Rect* clip)
+{
+	fromSheet = true;
+
+	//Get rid of preexisting texture
+	free();
+	// Will erase SpriteSheet image if previously assigned
+
+	if (sheet->getImage() == NULL)
+	{
+		printf("Error: Couldn't get Sprite from SpriteSheet.\n");
+		return false;
+	}
+
+	image = sheet->getImage();
+	clipRect = clip;
+	width = clipRect->w;
+	height = clipRect->h;
+	
+	anchorX = 0;
+	anchorY = 0;
+
+	return true;
+}
+
+bool Sprite::create(SpriteSheet* sheet, int sheetPosX, int sheetPosY)
+{
+	fromSheet = true;
+
+	//Get rid of preexisting texture
+	free();
+	// Will erase SpriteSheet image if previously assigned
+
+	if (sheet->getImage() == NULL)
+	{
+		printf("Error: Couldn't get Sprite from SpriteSheet.\n");
+		return false;
+	}
+
+	image = sheet->getImage();
+	int count = sheet->getSpriteCountByPos(sheetPosX, sheetPosY);
+	clipRect = sheet->getClip(count);
+	width = clipRect->w;
+	height = clipRect->h;
+
+	anchorX = 0;
+	anchorY = 0;
 
 	return true;
 }
 
 bool Sprite::create(std::string path, Color transparent)
 {
+	fromSheet = false;
+
 	//Get rid of preexisting texture
 	free();
+	// Will erase SpriteSheet image if previously assigned
 
 	//The final texture
 	SDL_Texture* newTexture = NULL;
@@ -83,6 +139,9 @@ bool Sprite::create(std::string path, Color transparent)
 				width = formattedSurface->w;
 				height = formattedSurface->h;
 
+				anchorX = 0;
+				anchorY = 0;
+
 				//Get pixel data in editable format
 				Uint32* pixs = (Uint32*)pixels;
 				int pixelCount = (pitch / 4) * height;
@@ -122,24 +181,28 @@ bool Sprite::create(std::string path, Color transparent)
 
 void Sprite::free()
 {
+	width = 0;
+	height = 0;
+	anchorX = 0;
+	anchorY = 0;
+	pixels = NULL;
+	pitch = 0;
+	clipRect = NULL;
+	angle = 0;
+
 	//Free texture if it exists
-	if (image != NULL)
+	//Clean only if not loaded from a sheet
+	if (image != NULL && !fromSheet)
 	{
 		SDL_DestroyTexture(image);
 		image = NULL;
-		width = 0;
-		height = 0;
-		pixels = NULL;
-		pitch = 0;
-		clipRect = NULL;
-		angle = 0;
 	}
 }
 
 void Sprite::draw(int x, int y, Flip flipped)
 {
 	//Set rendering space and render to screen
-	graphicsBox = { x, y, this->width, this->height };
+	graphicsBox = { x - (((float)anchorX / (float)100) * this->width), y - (((float)anchorY / (float)100) * this->height), this->width, this->height };
 
 	//Set clip rendering dimensions
 	if (this->clipRect != NULL)
@@ -201,8 +264,7 @@ int Sprite::getHeight() { return height; }
 SDL_Texture* Sprite::getImage() { return image; }
 float Sprite::getAngle() { return angle; }
 SDL_Rect* Sprite::getClip() { return clipRect; }
-SDL_Point* Sprite::getCenter() { return NULL; }	// FALTA
-
+//SDL_Point* Sprite::getCenter() { return NULL; }	// TODO
 
 void Sprite::setColor(Uint8 red, Uint8 green, Uint8 blue)
 {
@@ -235,3 +297,8 @@ void Sprite::setAlpha(Uint8 alpha)
 	//Modulate texture alpha
 	SDL_SetTextureAlphaMod(image, alpha);
 }
+
+void Sprite::setAnchorX(int x) { this->anchorX = x; }
+void Sprite::setAnchorY(int y) { this->anchorY = y; }
+int Sprite::getAnchorX() { return anchorX; }
+int Sprite::getAnchorY() { return anchorY; }
