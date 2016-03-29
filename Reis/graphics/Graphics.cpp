@@ -42,10 +42,10 @@ void Graphics::init(const char* title, int width, int height, bool set_fullscree
 	//Init Default Font
 	font = new Font("assets/arial.ttf", 20);
 
-	setColor(Color::WHITE);
-	setBgColor(Color::BLACK);
+	setColor(Color::White);
+	setBgColor(Color::Black);
 
-	printf("Success init graphics\n");
+	//printf("DEBUG: Success init graphics\n");
 }
 
 void Graphics::free()
@@ -75,7 +75,8 @@ void Graphics::free()
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
-	printf("Success close graphics\n");
+
+	//printf("DEBUG: Success close graphics\n");
 }
 
 void Graphics::reset()
@@ -83,14 +84,14 @@ void Graphics::reset()
 	//Init Default Font
 	font = new Font("assets/arial.ttf", 20);
 
-	setColor(Color::WHITE);
-	setBgColor(Color::BLACK);
+	setColor(Color::White);
+	setBgColor(Color::Black);
 }
 
 void Graphics::begin()
 {
 	//Clear screen
-	SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	SDL_SetRenderDrawColor(renderer, bgColor->r, bgColor->g, bgColor->b, bgColor->a);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_RenderClear(renderer);
 	//printf("Success open batch\n");
@@ -120,9 +121,9 @@ void Graphics::drawString(int x, int y, std::string text)
 	// Creates a surface based on font render type
 	switch (font->getRenderType())
 	{
-		case Font::RenderType::BLENDED:			textSurface = TTF_RenderText_Blended(font->getFont(), text.c_str(), cor); break;
-		case Font::RenderType::SHADED:			textSurface = TTF_RenderText_Shaded(font->getFont(), text.c_str(), cor, bgColor); break;
-		case Font::RenderType::SOLID: default:	textSurface = TTF_RenderText_Solid(font->getFont(), text.c_str(), cor); break;
+	case Font::RenderType::BLENDED:			textSurface = TTF_RenderText_Blended(font->getFont(), text.c_str(), ColorManager::getColor(cor)); break;
+	case Font::RenderType::SHADED:			textSurface = TTF_RenderText_Shaded(font->getFont(), text.c_str(), ColorManager::getColor(cor), ColorManager::getColor(bgColor)); break;
+	case Font::RenderType::SOLID: default:	textSurface = TTF_RenderText_Solid(font->getFont(), text.c_str(), ColorManager::getColor(cor)); break;
 	}
 
 	//Create texture from surface pixels
@@ -135,7 +136,7 @@ void Graphics::drawString(int x, int y, std::string text)
 	SDL_FreeSurface(textSurface);
 
 	// Sets alpha
-	SDL_SetTextureAlphaMod(fontTexture, cor.a);
+	SDL_SetTextureAlphaMod(fontTexture, cor->a);
 
 	//Render to screen
 	SDL_RenderCopyEx(renderer, fontTexture, NULL, &graphicsBox, 0.0, NULL, SDL_FLIP_NONE);
@@ -157,9 +158,9 @@ void Graphics::drawString(Font* temp_font, int x, int y, std::string text)
 	// Creates a surface based on font render type
 	switch (temp_font->getRenderType())
 	{
-	case Font::RenderType::BLENDED:			textSurface = TTF_RenderText_Blended(temp_font->getFont(), text.c_str(), cor); break;
-	case Font::RenderType::SHADED:			textSurface = TTF_RenderText_Shaded(temp_font->getFont(), text.c_str(), cor, bgColor); break;
-	case Font::RenderType::SOLID: default:	textSurface = TTF_RenderText_Solid(temp_font->getFont(), text.c_str(), cor); break;
+	case Font::RenderType::BLENDED:			textSurface = TTF_RenderText_Blended(temp_font->getFont(), text.c_str(), ColorManager::getColor(cor)); break;
+	case Font::RenderType::SHADED:			textSurface = TTF_RenderText_Shaded(temp_font->getFont(), text.c_str(), ColorManager::getColor(cor), ColorManager::getColor(bgColor)); break;
+	case Font::RenderType::SOLID: default:	textSurface = TTF_RenderText_Solid(temp_font->getFont(), text.c_str(), ColorManager::getColor(cor)); break;
 	}
 
 	//Create texture from surface pixels
@@ -172,7 +173,7 @@ void Graphics::drawString(Font* temp_font, int x, int y, std::string text)
 	SDL_FreeSurface(textSurface);
 
 	// Sets alpha
-	SDL_SetTextureAlphaMod(fontTexture, cor.a);
+	SDL_SetTextureAlphaMod(fontTexture, cor->a);
 
 	//Render to screen
 	SDL_RenderCopyEx(renderer, fontTexture, NULL, &graphicsBox, 0.0, NULL, SDL_FLIP_NONE);
@@ -186,16 +187,16 @@ void Graphics::drawString(int x, int y, std::string text, int startIndex, int en
 
 void Graphics::drawPixel(int x, int y)
 {
-	SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+	SDL_SetRenderDrawColor(renderer, cor->r, cor->g, cor->b, cor->a);
 	SDL_RenderDrawPoint(renderer, x, y);
-	SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	SDL_SetRenderDrawColor(renderer, bgColor->r, bgColor->g, bgColor->b, bgColor->a);
 }
 
 void Graphics::drawLine(int x1, int y1, int x2, int y2)
 {
-	SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+	SDL_SetRenderDrawColor(renderer, cor->r, cor->g, cor->b, cor->a);
 	SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-	SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	SDL_SetRenderDrawColor(renderer, bgColor->r, bgColor->g, bgColor->b, bgColor->a);
 }
 
 void Graphics::drawRect(int x, int y, int width, int height, bool f)
@@ -203,13 +204,13 @@ void Graphics::drawRect(int x, int y, int width, int height, bool f)
 	//Render filled quad
 	graphicsBox = { x, y, width, height };
 
-	SDL_SetRenderDrawColor(renderer, cor.r, cor.g, cor.b, cor.a);
+	SDL_SetRenderDrawColor(renderer, cor->r, cor->g, cor->b, cor->a);
 
 	// Filled ou Vazado
 	if (f) SDL_RenderFillRect(renderer, &graphicsBox);
 	else SDL_RenderDrawRect(renderer, &graphicsBox);
 
-	SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	SDL_SetRenderDrawColor(renderer, bgColor->r, bgColor->g, bgColor->b, bgColor->a);
 }
 
 /*
@@ -236,7 +237,7 @@ void Graphics::drawEllipse(int x, int y, int rx, int ry)
 	*/
 	if ((rx < 0) || (ry < 0)) {
 		//return (-1);
-		printf("CANT PRINT CIRCLE : RADIUS ERROR");
+		printf("ERROR: Couldn't print Circle : Invalid Radius ERROR\n");
 	}
 
 	/*
@@ -381,7 +382,7 @@ void Graphics::drawFilledEllipse(int x, int y, int rx, int ry)
 	* Sanity check radii
 	*/
 	if ((rx < 0) || (ry < 0)) {
-		printf("COULDNT DRAW CIRCLE WITH INVALID RADIUS");
+		printf("ERROR: Couldn't print Circle : Invalid Radius ERROR\n");
 	}
 
 	/*
@@ -497,118 +498,36 @@ void Graphics::drawFilledEllipse(int x, int y, int rx, int ry)
 
 void Graphics::setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 {
-	cor.r = red;
-	cor.g = green;
-	cor.b = blue;
-	cor.a = alpha;
+	cor->r = red;
+	cor->g = green;
+	cor->b = blue;
+	cor->a = alpha;
 }
 
-void Graphics::setColor(Color c, Uint8 alpha)
+void Graphics::setColor(Color* c)
 {
-	cor.a = alpha;
-
-	switch (c) {
-	case Color::WHITE:
-		cor.r = 255; cor.g = 255; cor.b = 255;
-		break;
-	case Color::BLACK:
-		cor.r = 0; cor.g = 0; cor.b = 0;
-		break;
-	case Color::RED:
-		cor.r = 255; cor.g = 0; cor.b = 0;
-		break;
-	case Color::GREEN:
-		cor.r = 0; cor.g = 255; cor.b = 0;
-		break;
-	case Color::BLUE:
-		cor.r = 0; cor.g = 0; cor.b = 255;
-		break;
-	case Color::CYAN:
-		cor.r = 0; cor.g = 255; cor.b = 255;
-		break;
-	case Color::ORANGE:
-		cor.r = 255; cor.g = 165; cor.b = 0;
-		break;
-	case Color::BROWN:
-		cor.r = 184; cor.g = 134; cor.b = 11;
-		break;
-	case Color::YELLOW:
-		cor.r = 255; cor.g = 255; cor.b = 0;
-		break;
-	case Color::PURPLE:
-		cor.r = 128; cor.g = 0; cor.b = 128;
-		break;
-	default:
-		printf("Invalid color.");
-		break;
-	}
+	cor = c;
 }
 
-void Graphics::setColor(SDL_Color c)
-{
-	this->cor = c;
-}
-
-SDL_Color Graphics::getColor()
+Color* Graphics::getColor()
 {
 	return this->cor;
 }
 
 void Graphics::setBgColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 {
-	bgColor.r = red;
-	bgColor.g = green;
-	bgColor.b = blue;
-	bgColor.a = alpha;
+	bgColor->r = red;
+	bgColor->g = green;
+	bgColor->b = blue;
+	bgColor->a = alpha;
 }
 
-void Graphics::setBgColor(Color c, Uint8 alpha)
+void Graphics::setBgColor(Color* c)
 {
-	bgColor.a = alpha;
-
-	switch (c) {
-	case Color::WHITE:
-		bgColor.r = 255; bgColor.g = 255; bgColor.b = 255;
-		break;
-	case Color::BLACK:
-		bgColor.r = 0; bgColor.g = 0; bgColor.b = 0;
-		break;
-	case Color::RED:
-		bgColor.r = 255; bgColor.g = 0; bgColor.b = 0;
-		break;
-	case Color::GREEN:
-		bgColor.r = 0; bgColor.g = 255; bgColor.b = 0;
-		break;
-	case Color::BLUE:
-		bgColor.r = 0; bgColor.g = 0; bgColor.b = 255;
-		break;
-	case Color::CYAN:
-		bgColor.r = 0; bgColor.g = 255; bgColor.b = 255;
-		break;
-	case Color::ORANGE:
-		bgColor.r = 255; bgColor.g = 165; bgColor.b = 0;
-		break;
-	case Color::BROWN:
-		bgColor.r = 184; bgColor.g = 134; bgColor.b = 11;
-		break;
-	case Color::YELLOW:
-		bgColor.r = 255; bgColor.g = 255; bgColor.b = 0;
-		break;
-	case Color::PURPLE:
-		bgColor.r = 128; bgColor.g = 0; bgColor.b = 128;
-		break;
-	default:
-		printf("Invalid bg color.");
-		break;
-	}
+	bgColor = c;
 }
 
-void Graphics::setBgColor(SDL_Color c)
-{
-	this->bgColor = c;
-}
-
-SDL_Color Graphics::getBgColor()
+Color* Graphics::getBgColor()
 {
 	return this->bgColor;
 }

@@ -10,7 +10,7 @@ Font::Font(std::string filepath, int size, RenderType type, FontStyle style)
 	this->font = TTF_OpenFont(filepath.c_str(), size);
 	if (!font)
 	{
-		printf("Couldn't load font: %s.\n", filepath);
+		printf("ERROR: Couldn't load font: %s.\n", filepath);
 	}
 
 	changeFontStyle(style);

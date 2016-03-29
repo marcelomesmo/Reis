@@ -15,11 +15,11 @@ namespace ColorManager
 	/**
 	 * @brief      Convert a Reis' Color to a SDL_Color.
 	 *
-	 * @param[in]  c     Color parameter.
+	 * @param[in]  c     Color object.
 	 *
 	 * @return     Return a SDL_Color corresponding to the Color parameter.
 	 */
-	SDL_Color getColor(Color c);
+	SDL_Color getColor(Color* c);
 }
 
 #endif

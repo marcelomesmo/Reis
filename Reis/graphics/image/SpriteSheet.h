@@ -13,7 +13,7 @@
 class SpriteSheet
 {
 public:
-	SpriteSheet(std::string path, int sprite_width, int sprite_height, Color transparent = Color::CYAN);
+	SpriteSheet(std::string path, int sprite_width, int sprite_height, Color* transparent = Color::Cyan);
 	SpriteSheet();
 	/**
 	 * @brief      Create a new SpriteSheet in which Sprites have the same size
@@ -26,7 +26,7 @@ public:
 	 *
 	 * @return     True if created successfully.
 	 */
-	bool create(std::string path, int sprite_width, int sprite_height, Color transparent = Color::CYAN);
+	bool create(std::string path, int sprite_width, int sprite_height, Color* transparent = Color::Cyan);
 	/**
 	* @brief      Create a new SpriteSheet in which Sprites have different
 	*             sizes (in width and height). Read meta-data saved in a Xml
@@ -112,7 +112,7 @@ public:
 private:
 	//The actual hardware texture
 	SDL_Texture* image;
-	bool initImage(std::string path, Color transparent = Color::CYAN);
+	bool initImage(std::string path, Color* transparent = Color::Cyan);
 	void* pixels;
 	int pitch;
 

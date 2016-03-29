@@ -76,7 +76,7 @@ bool Animation::addFrame(SpriteSheet* sheet, int count, int duration)
 	this->total_frames++;
 	this->duration.push_back(duration);
 
-	printf("Added frame %i to animation.\n", sprites.size());
+	//printf("DEBUG: Added frame %i to animation.\n", sprites.size());
 	return true;
 }
 bool Animation::addFrame(SpriteSheet* sheet, int sheetPosX, int sheetPosY, int duration)
@@ -93,7 +93,7 @@ bool Animation::addFrame(SpriteSheet* sheet, SDL_Rect* clip, int duration)
 	this->total_frames++;
 	this->duration.push_back(duration);
 
-	printf("Added frame %i to animation.\n", sprites.size());
+	//printf("DEBUG: Added frame %i to animation.\n", sprites.size());
 	return true;
 }
 

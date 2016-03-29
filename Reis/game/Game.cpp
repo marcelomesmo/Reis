@@ -26,8 +26,7 @@ void Game::create(const char* title, int width, int height, bool set_fullscreen,
 
 	frameTicks = 0;
 
-	printf("Game Init\n");
-
+	//printf("DEBUG: Game Init\n");
 }
 
 void Game::end()
@@ -45,21 +44,20 @@ void Game::end()
 	// Clean up Graphics
 	g.free();
 
-
-	printf("Game Cleanup\n");
+	//printf("DEBUG: Game Cleanup\n");
 }
 
 // Init a list of all scenes with ID from 0 to allScenesHere.size-1
 void Game::prepareScenes(vector<Scene*> allScenesHere)
 {
 	scenesList = allScenesHere;
-	cout << "Number of scenes: " << scenesList.size() << " \n";
+	//cout << "Number of scenes: " << scenesList.size() << " \n";
 }
 // Push the scene by ID
 void Game::enterScene(int id, Transition* leave, Transition* enter)
 {
 	// Se o ID for incorreto nao muda
-	if ((unsigned)id >= this->scenesList.size()) cout << "Invalid scene ID\n";
+	if ((unsigned)id >= this->scenesList.size()) cout << "ERROR: Invalid scene ID " << id << ".\n";
 	// Se o ID for correto muda de estado
 	else
 	{
@@ -138,7 +136,7 @@ void Game::start()
 		//printf("Early game, loading first scene\n");
 	}
 	else {
-		printf("ERROR: We don't have the first Scene initialization.\n"); 
+		printf("ERROR: We don't have first Scene initialization.\n"); 
 		quit();
 	}
 
@@ -171,7 +169,7 @@ void Game::update()
 		leaveTransition->update(this, delta);
 		if (leaveTransition->isFinished())
 		{
-			//printf("finished LEAVE transition, loading scene\n");
+			//printf("DEBUG: Finished LEAVE transition, loading Scene.\n");
 			changeScene(scenesList[nextScene]);
 			delete leaveTransition;
 			leaveTransition = NULL;
@@ -186,7 +184,7 @@ void Game::update()
 		enterTransition->update(this, delta);
 		if (enterTransition->isFinished())
 		{
-			//printf("finished ENTER transition, scene fully loaded\n");
+			//printf("DEBUG: Finished ENTER transition, Scene fully loaded.\n");
 			delete enterTransition;
 			enterTransition = NULL;
 		}

@@ -17,7 +17,7 @@
 class Sprite
 {
 public:
-	Sprite(std::string path, Color transparent = Color::CYAN);
+	Sprite(std::string path, Color* transparent = Color::Cyan);
 	Sprite();
 	~Sprite();
 	
@@ -34,7 +34,7 @@ public:
 	 *
 	 * @return     True if loaded successfully.
 	 */
-	bool create(std::string path, Color transparent = Color::CYAN);
+	bool create(std::string path, Color* transparent = Color::Cyan);
 	/**
 	  * @brief      Create a new Sprite object.
 	  *
@@ -122,7 +122,7 @@ public:
 	 *
 	 * @param[in]  c     Color component to set.
 	 */
-	void setColor(Color c);
+	void setColor(Color* c);
 
 	/**
 	 * @brief      Set image Blending.

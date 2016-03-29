@@ -16,7 +16,7 @@ bool MuSSEXmlParser::parseXmlFile(const char src[])
 	content = buffer.str();
 	if (content.size() == 0)
 	{
-		printf("ERROR: Failed to load src file.\n");
+		printf("ERROR: Failed to load XML src file.\n");
 		return false;
 	}
 

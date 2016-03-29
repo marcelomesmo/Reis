@@ -16,14 +16,14 @@ public:
 	 *
 	 * @param[in]  c     The Color we are going to Fade In from.
 	 */
-	FadeIn(Color c = Color::BLACK);
+	FadeIn(Color* c = Color::Black);
 	/**
 	 * @brief      Create a new Fade In Transition.
 	 *
 	 * @param[in]  c     The Color we are going to Fade In from.
 	 * @param[in]  time  The time it takes for the transition to finish.
 	 */
-	FadeIn(Color c, Uint32 time = 500);
+	FadeIn(Color* c, Uint32 time = 500);
 	/**
 	 * @brief      Updates the transition effects.
 	 *
@@ -52,18 +52,18 @@ public:
 	bool isFinished();
 
 	/**
-	* @brief      Set Transition color.
+	* @brief      Set Transition color. Change Color but keep the Alpha.
 	*
-	* @param[in]  c      A enum Color parameter.
-	* @param[in]  alpha  The initial alpha value for the Color.
+	* @param[in]  c      A Color parameter.
+	* @param[in]  alpha  Alpha value of the Transition.
 	*/
-	void setColor(Color c, Uint8 alpha = 255);
+	void setColor(Color* c);
 
 private:
 	/**
 	 * The Color to Fade In from.
 	 */
-	SDL_Color cor;
+	Color* cor;
 	/**
 	 * Current Color alpha value.
 	 */

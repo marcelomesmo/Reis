@@ -14,22 +14,28 @@ void Input::init()
 	this->mouseDirY = 0;
 
 	// Inits controller subsystem
-	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0) printf("Failed init Controller!\n");
-	else printf("Success init Controller\n");
+	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0) printf("ERROR: Failed to init Controller!\n");
+	//else printf("DEBUG: Success init Controller\n");
 
 	numControllers = 0;
 	lockInput(InputType::CONTROLLER);	// Init all controllers locked
-	for (int i = 0; i < SDL_NumJoysticks(); ++i)
-	{
-		// Init alreadly connected controllers and unlock them
-		openController(i);
-	}
+	/*
+	Might need to force start controllers. 
+	SDL_CONTROLLERADDED is currently called on startup.
+
+		for (int i = 0; i < SDL_NumJoysticks(); ++i)
+		{
+			// Init alreadly connected controllers and unlock them
+			openController(i);
+		}
+
+	*/
 	this->sensibility = 0.25;	// starts dead zone at 8000
 
 	// Inits input
 	this->do_quit = false;
 
-	printf("Success init Input\n");
+	//printf("DEBUG: Success to init Input\n");
 }
 
 void Input::free()
@@ -67,7 +73,7 @@ void Input::free()
 	// Close Controller subsystem
 	SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 
-	printf("Success close input\n");
+	//printf("DEBUG: Success close input\n");
 }
 
 // Clear the state of the keys
@@ -409,19 +415,19 @@ void Input::openController(int id)
 	// Skip if invalid
 	if (!SDL_IsGameController(id))
 	{
-		printf("Failed to open controller %s\n", SDL_GetError());
+		printf("ERROR: Failed to open controller %s\n", SDL_GetError());
 		return;
 	}
 	// Break if opened max num of controllers
 	if (numControllers >= MAX_CONTROLLERS)
 	{
-		printf("Too much controllers, limit reached %i\n", MAX_CONTROLLERS);
+		printf("ERROR: Too much controllers, limit reached %i\n", MAX_CONTROLLERS);
 		return;
 	}
 	// Break if controller alreadly opened
 	if (id < numControllers)
 	{
-		printf("Controller %i alreadly added\n", id + 1);
+		printf("ERROR: Controller %i alreadly added\n", id + 1);
 		return;
 	}
 	// Successfully opened controller
@@ -432,7 +438,7 @@ void Input::openController(int id)
 	this->isControllerLocked[id] = false;
 	
 	//DEBUG WITH : 
-	printf("Success opened controler name: %s : num %i / total %i\n", SDL_GameControllerNameForIndex(id), id + 1, SDL_NumJoysticks());
+	//printf("DEBUG: Success opening controller name: %s : num %i / total %i\n", SDL_GameControllerNameForIndex(id), id + 1, SDL_NumJoysticks());
 }
 
 void Input::closeController(int id)
@@ -457,7 +463,7 @@ void Input::closeController(int id)
 		// Lock closed controller
 		this->isControllerLocked[id] = true;
 
-		printf("Closed controller %i / now total %i\n", id + 1, numControllers);
+		//printf("DEBUG: Closed controller %i / now total %i\n", id + 1, numControllers);
 	}
 }
 
@@ -566,7 +572,7 @@ void Input::keyToString(SDL_Scancode key)
 	if ((key >= SDL_SCANCODE_A) && (key <= SDL_SCANCODE_0))
 	{
 		const char* a = SDL_GetScancodeName(key);
-		printf("key %s\n", a);
+		printf("Key %s\n", a);
 	}
 }
 
@@ -588,7 +594,7 @@ std::string Input::getKeyString()
 	return "";
 }
 
-// Controller to String, pode ser util deixar aqui
+// Mouse Button to String
 char* Input::MouseButtonName(const Uint8 button)
 {
 	switch (button)
@@ -602,7 +608,7 @@ default: return "???";
 	}
 }
 
-// Controller to String, pode ser util deixar aqui
+// Controller Axis to String
 char* Input::ControllerAxisName(const Uint8 axis)
 {
 	switch (axis)

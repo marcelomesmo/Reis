@@ -169,18 +169,11 @@ public:
 	 */
 	void setColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha = 255);
 	/**
-	 * @brief      Set draw color using Color enum class.
+	 * @brief      Set draw color using Color class.
 	 *
-	 * @param[in]  c      Color enum.
-	 * @param[in]  alpha  The alpha (opt) component of the color.
+	 * @param[in]  c      Color object.
 	 */
-	void setColor(Color c, Uint8 alpha = 255);
-	/**
-	 * @brief      Set draw color using SDL_Color.
-	 *
-	 * @param[in]  c     SDL_Color component.
-	 */
-	void setColor(SDL_Color c);
+	void setColor(Color* c);
 	/**
 	 * @brief      Set background color using Uint8. Use this for new colors.
 	 *             Also changes Shaded TTF Font box color.
@@ -192,33 +185,25 @@ public:
 	 */
 	void setBgColor(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha = 255);
 	/**
-	 * @brief      Set background color using Color enum class. Also changes
+	 * @brief      Set background color using Color class. Also changes
 	 *             Shaded TTF Font box color.
 	 *
-	 * @param[in]  c      Color enum.
-	 * @param[in]  alpha  The alpha (opt) component of the color.
+	 * @param[in]  c      Color object.
 	 */
-	void setBgColor(Color c, Uint8 alpha = 255);
-	/**
-	 * @brief      Set background color using SDL_Color. Also changes Shaded TTF
-	 *             Font box color.
-	 *
-	 * @param[in]  c     SDL_Color component.
-	 */
-	void setBgColor(SDL_Color c);
+	void setBgColor(Color* c);
 
 	/**
 	 * @brief      Get current draw color.
 	 *
-	 * @return     SDL_Color of the current color.
+	 * @return     Color of the current color.
 	 */
-	SDL_Color getColor();
+	Color* getColor();
 	/**
 	 * @brief      Get current background color.
 	 *
-	 * @return     SDL_Color of the current background color.
+	 * @return     Color of the current background color.
 	 */
-	SDL_Color getBgColor();
+	Color* getBgColor();
 
 	/**
 	 * @brief      Set the font to be used when rendering text.
@@ -260,11 +245,11 @@ private:
 	/**
 	 * The current context draw color.
 	 */
-	SDL_Color cor;
+	Color* cor;
 	/**
 	 * The current context background color and Shaded TTF Font box color.
 	 */
-	SDL_Color bgColor;
+	Color* bgColor;
 
 	// Auxiliar rect for drawing
 	SDL_Rect graphicsBox;

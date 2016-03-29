@@ -1,6 +1,6 @@
 #include "SpriteSheet.h"
 
-SpriteSheet::SpriteSheet(std::string path, int sprite_width, int sprite_height, Color transparent)
+SpriteSheet::SpriteSheet(std::string path, int sprite_width, int sprite_height, Color* transparent)
 {
 	create(path, sprite_width, sprite_height);
 }
@@ -29,7 +29,7 @@ void SpriteSheet::free()
 	*			*************************************
 	*/
 // Load Sprite Sheets using Sprites with the same size (in width and height)
-bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, Color transparent)
+bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, Color* transparent)
 {
 	// Create a Sprite with specified image path
 	if(!initImage(path, transparent)) return false;
@@ -67,7 +67,7 @@ bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, 
 	}
 	// Get how many Sprites we have in the Sprite Sheet (include empty spaces)
 	this->size = spriteClips.size();
-	printf("DEBUG: Spritesheet %ix%i size: %i\n", lines, columns, size);
+	//printf("DEBUG: Spritesheet %ix%i size: %i\n", lines, columns, size);
 	return true;
 }
 // Load Sprite Sheets using a XML metadata for the Sprites
@@ -93,7 +93,7 @@ bool SpriteSheet::create(std::string path, std::string musse_xml_path)
 		return false;
 	}
 
-	printf("DEBUG: Spritesheet %s size: %i\n", parsed_xml.getName().c_str(), size);
+	//printf("DEBUG: Spritesheet %s size: %i\n", parsed_xml.getName().c_str(), size);
 	return true;
 }
 
@@ -123,7 +123,7 @@ SDL_Rect* SpriteSheet::getClip(int sheetPosX, int sheetPosY)
 		printf("ERROR: Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
+	//printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
 SDL_Rect* SpriteSheet::getClip(int count)
@@ -132,7 +132,7 @@ SDL_Rect* SpriteSheet::getClip(int count)
 		printf("ERROR: Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
+	//printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
 vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
@@ -146,7 +146,7 @@ vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
 		}
 	}
 
-	printf("DEBUG: Clips for Animation %s returned. Frames Quantity: %d \n", name.c_str(), novo.size());
+	//printf("DEBUG: Clips for Animation %s returned. Frames Quantity: %d \n", name.c_str(), novo.size());
 	return novo;
 }
 bool SpriteSheet::clipExist(std::string name)
@@ -185,7 +185,7 @@ int SpriteSheet::getHeight() { return height; }
 SDL_Texture* SpriteSheet::getImage() { return image; }
 
 
-bool SpriteSheet::initImage(std::string path, Color transparent)
+bool SpriteSheet::initImage(std::string path, Color* transparent)
 {
 	//Get rid of preexisting texture
 	free();
@@ -197,7 +197,7 @@ bool SpriteSheet::initImage(std::string path, Color transparent)
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
 	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		printf("ERROR: Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
 	}
 	else
 	{
@@ -205,7 +205,7 @@ bool SpriteSheet::initImage(std::string path, Color transparent)
 		SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_RGBA8888, NULL);
 		if (formattedSurface == NULL)
 		{
-			printf("Unable to convert loaded surface to display format! %s\n", SDL_GetError());
+			printf("ERROR: Unable to convert loaded surface to display format! %s\n", SDL_GetError());
 		}
 		else
 		{
@@ -213,7 +213,7 @@ bool SpriteSheet::initImage(std::string path, Color transparent)
 			newTexture = SDL_CreateTexture(Graphics::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h);
 			if (newTexture == NULL)
 			{
-				printf("Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
+				printf("ERROR: Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
 			}
 			else
 			{
@@ -262,7 +262,7 @@ bool SpriteSheet::initImage(std::string path, Color transparent)
 	}
 
 	//Return success
-	printf("Sucessfully loaded image: %s\n", path.c_str());
+	//printf("DEBUG: Sucessfully loaded image: %s\n", path.c_str());
 	image = newTexture;
 	return image != NULL;
 }
