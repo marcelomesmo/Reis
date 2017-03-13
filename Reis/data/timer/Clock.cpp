@@ -1,8 +1,8 @@
-#include "Timer.h"
+#include "Clock.h"
 
-Timer::Timer()
+Clock::Clock()
 {
-	//Initialize the variables
+	//Init variables
 	startTicks = 0;
 	pausedTicks = 0;
 
@@ -10,12 +10,12 @@ Timer::Timer()
 	running = false;
 }
 
-void Timer::start()
+void Clock::start()
 {
-	//Start the timer
+	//Start the clock
 	running = true;
 
-	//Unpause the timer
+	//Unpause the clock
 	paused = false;
 
 	//Get the current clock time
@@ -24,12 +24,12 @@ void Timer::start()
 }
 
 // The stop function basically reinitialize all the variables.
-void Timer::stop()
+void Clock::stop()
 {
-	//Stop the timer
+	//Stop the clock
 	running = false;
 
-	//Unpause the timer
+	//Unpause the clock
 	paused = false;
 
 	//Clear tick variables
@@ -37,12 +37,12 @@ void Timer::stop()
 	pausedTicks = 0;
 }
 
-void Timer::pause()
+void Clock::pause()
 {
-	//If the timer is running and isn't already paused
+	//If the clock is running and isn't already paused
 	if (running && !paused)
 	{
-		//Pause the timer
+		//Pause the clock
 		paused = true;
 
 		//Calculate the paused ticks
@@ -51,12 +51,12 @@ void Timer::pause()
 	}
 }
 
-void Timer::unpause()
+void Clock::unpause()
 {
-	//If the timer is running and paused
+	//If the clock is running and paused
 	if (running && paused)
 	{
-		//Unpause the timer
+		//Unpause the clock
 		paused = false;
 
 		//Reset the starting ticks
@@ -67,18 +67,18 @@ void Timer::unpause()
 	}
 }
 
-Uint32 Timer::getTicks()
+Uint32 Clock::getTicks()
 {
-	//The actual timer time
+	//The actual clock time
 	Uint32 time = 0;
 
-	//If the timer is running
+	//If the clock is running
 	if (running)
 	{
-		//If the timer is paused
+		//If the clock is paused
 		if (paused)
 		{
-			//Return the number of ticks when the timer was paused
+			//Return the number of ticks when the clock was paused
 			time = pausedTicks;
 		}
 		else
@@ -91,14 +91,23 @@ Uint32 Timer::getTicks()
 	return time;
 }
 
-bool Timer::isRunning()
+float Clock::getTime()
 {
-	//Timer is running and paused or unpaused
+	float timeSeconds = (this->getTicks() / 1000.f);
+
+	std::cout << std::fixed << std::setprecision(3) << timeSeconds << " s" << std::endl;
+
+	return timeSeconds;
+}
+
+bool Clock::isRunning()
+{
+	//Clock is running and paused or unpaused
 	return running;
 }
 
-bool Timer::isPaused()
+bool Clock::isPaused()
 {
-	//Timer is running and paused
+	//Clock is running and paused
 	return paused && running;
 }

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <utility>
-#include "../../data/Timer.h"
+#include "../../data/timer/Clock.h"
 #include "Sprite.h"
 
 /**
@@ -11,13 +11,14 @@
 *
 * @author     marcelomesmo
 */
-class Animation
+class Animation : public Resource
 {
 public:
 	/*Animation(vector<Sprite*> spriteList);
 	Animation(SpriteSheet* sheet, int count, int frames, int duration);
 	Animation(SpriteSheet* sheet, int sheetPosX, int sheetPosY, int frames, int duration);*/
 	Animation();
+
 	/**
 	* @brief      Create a new Animation object.
 	*
@@ -93,7 +94,8 @@ public:
 	~Animation();
 	// No need, since every image in the animation is referenced by a sheet. So, will also
 	// be deallocated when the sheet is.
-	//void free();
+	// No need to free the Sprite list (sprites), when Animation dies they die.
+	// void free();
 
 	/**
 	 * @brief      Add a new Sprite to the Animation.
@@ -208,9 +210,10 @@ private:
 	bool running;
 	bool ended;
 
-	// Timer that controls the animation flow.
-	Timer timer;
+	// Clock that controls the animation flow.
+	Clock timer;
 	std::vector<unsigned int> duration;
+	// Will cap the duration of each frame in animation.
 
 	// Current animation frame
 	int frame;

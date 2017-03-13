@@ -10,6 +10,8 @@ SpriteSheet::SpriteSheet()
 
 SpriteSheet::~SpriteSheet()
 {
+	//std::cout << "DEBUG: SpriteSheet is dead." << std::endl;
+	free();
 }
 void SpriteSheet::free()
 {
@@ -20,6 +22,13 @@ void SpriteSheet::free()
 		image = NULL;
 		width = 0;
 		height = 0;
+
+		//Free pointers
+		for (SDL_Rect* s : spriteClips)
+		{
+			delete s;
+			s = NULL;
+		}
 	}
 }
 
@@ -135,11 +144,11 @@ SDL_Rect* SpriteSheet::getClip(int count)
 	//printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
-vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
+std::vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
 {
-	vector<SDL_Rect*> novo;
+	std::vector<SDL_Rect*> novo;
 
-	for (pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
+	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
 	{
 		if (s.first == name){
 			novo.push_back(s.second);
@@ -159,7 +168,7 @@ bool SpriteSheet::clipExist(std::string name)
 
 	// Check if theres a animation with that name
 	bool hasAnim = false;
-	for (pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
+	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
 	{
 		if (s.first == name){
 			hasAnim = true;

@@ -30,9 +30,16 @@ bool MuSSEXmlParser::parseXmlFile(const char src[])
 	//cout << "DEBUG: Root element : " << spritesheet->name() << "\n";
 	//cout << "----------------------------" << "\n";
 
-	this->sheet_name = spritesheet->name();
-	// this->sheet_path = ?
-	// this->color_key = ?
+	this->sheet_name = spritesheet->first_attribute("image_name")->value();
+	//cout << "DEBUG: SpriteSheet image path: " << sheet_name << "\n";
+	this->width = atoi( spritesheet->first_attribute("width")->value() );
+	this->height = atoi( spritesheet->first_attribute("height")->value() );
+	//cout << "DEBUG: SpriteSheet width: " << width << " height: " << height << "\n";
+	int r = atoi( spritesheet->first_attribute("ck_r")->value() );
+	int g = atoi( spritesheet->first_attribute("ck_g")->value() );
+	int b = atoi( spritesheet->first_attribute("ck_b")->value() );
+	this->colorkey = new Color(r, g, b);
+	//cout << "DEBUG: SpriteSheet color key: r " << r << " g " << g << " b " << b << "\n";
 
 	// Get a list of Animation elements
 	animations = spritesheet->first_node("animation");
@@ -40,10 +47,10 @@ bool MuSSEXmlParser::parseXmlFile(const char src[])
 	return true;
 }
 
-std::vector<pair<std::string, SDL_Rect*>> MuSSEXmlParser::getClips()
+std::vector<std::pair<std::string, SDL_Rect*>> MuSSEXmlParser::getClips()
 {
 	// A vector with animation names and clips
-	std::vector<pair<std::string, SDL_Rect*>> novo;
+	std::vector<std::pair<std::string, SDL_Rect*>> novo;
 
 	std::string anim_name;
 		// Inside each animation we have a vector of sprites with : posX, posY, w, h, clip and name of each sprite
@@ -81,5 +88,4 @@ std::vector<pair<std::string, SDL_Rect*>> MuSSEXmlParser::getClips()
 }
 
 std::string MuSSEXmlParser::getName() { return this->sheet_name; }
-//std::string MuSSEXmlParser::getPath() { return this->sheet_path; }
-//Color MuSSEXmlParser::getColorKey() { return this->; }
+Color* MuSSEXmlParser::getColorKey() { return this->colorkey; }

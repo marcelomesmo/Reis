@@ -51,7 +51,7 @@ void Game::end()
 void Game::prepareScenes(vector<Scene*> allScenesHere)
 {
 	scenesList = allScenesHere;
-	//cout << "Number of scenes: " << scenesList.size() << " \n";
+	//cout << "DEBUG: Number of scenes: " << scenesList.size() << " \n";
 }
 // Push the scene by ID
 void Game::enterScene(int id, Transition* leave, Transition* enter)

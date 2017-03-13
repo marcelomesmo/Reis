@@ -64,6 +64,14 @@ Added MuSSEXmlParser to Data.
 Changed Sprite creation.  
 Added anchor support to Sprite.  
   
+13/03/2017
+Renamed Timer to Clock.
+Changed Sprite, Animation and SpriteSheet inheritance.
+Added Resouce to Resources.
+Added ResouceHolder to Resources.
+Added ResouceManager to Resources.
+Added XML support to Resources.
+  
   </br>
 Feel free to make contributions.  
 If you encounter any bugs, please send me an email.  

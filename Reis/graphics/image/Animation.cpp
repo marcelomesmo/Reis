@@ -13,6 +13,12 @@ Animation::Animation()
 
 	this->autoRepeat = true;
 }
+
+Animation::~Animation()
+{
+	//std::cout << "DEBUG: Animation is dead." << std::endl;
+}
+
 bool Animation::create(SpriteSheet* sheet, int count, int frames, int duration)
 {
 	for (int i = count; i < count + frames; i++) addFrame(sheet, i, duration);
@@ -57,14 +63,10 @@ bool Animation::create(SpriteSheet* sheet, std::string name, int duration)
 	// Invalid Clip or Animation dont exist for that name
 	if (!sheet->clipExist(name)) return false;
 
-	vector<SDL_Rect*> clips = sheet->getClip(name);
+	std::vector<SDL_Rect*> clips = sheet->getClip(name);
 
 	for( unsigned int i = 0; i < clips.size(); i++) addFrame(sheet, clips.at(i), duration);
 	return true;
-}
-
-Animation::~Animation()
-{
 }
 
 bool Animation::addFrame(SpriteSheet* sheet, int count, int duration)

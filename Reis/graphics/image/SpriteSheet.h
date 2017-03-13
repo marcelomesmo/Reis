@@ -4,13 +4,14 @@
 #include <vector>
 #include "../Graphics.h"
 #include "../../data/xml/MuSSEXmlParser.h"
+#include "../../data/resource/Resource.h"
 
 /**
  * @brief      Create a new SpriteSheet.
  *
  * @author     marcelomesmo
  */
-class SpriteSheet
+class SpriteSheet : public Resource
 {
 public:
 	SpriteSheet(std::string path, int sprite_width, int sprite_height, Color* transparent = Color::Cyan);
@@ -58,7 +59,7 @@ public:
 	// Check if an Animation exists in the SpriteSheet.
 	bool clipExist(std::string name);
 	// Get a set of Sprite clips by Animation name from the XML.
-	vector<SDL_Rect*> getClip(std::string name);
+	std::vector<SDL_Rect*> getClip(std::string name);
 
 	/**
 	 * @brief      Get a Sprite clip ordered count position based on the Sprite
@@ -123,7 +124,7 @@ private:
 	// Used for fixed size Sprite Sheets
 	std::vector<SDL_Rect*> spriteClips;
 	// Used for multi size Sprite Sheets (read from XML)
-	std::vector<pair<std::string, SDL_Rect*>> spriteClipsFromXml;
+	std::vector<std::pair<std::string, SDL_Rect*>> spriteClipsFromXml;
 	int size;
 	int columns;
 	int lines;

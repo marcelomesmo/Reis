@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <stdio.h>
+#include <string>
 #include "Color.h"
 
 /** @namespace ColorManager
@@ -20,6 +21,15 @@ namespace ColorManager
 	 * @return     Return a SDL_Color corresponding to the Color parameter.
 	 */
 	SDL_Color getColor(Color* c);
+
+	/**
+	* @brief      Convert a std::string to a Color.
+	*
+	* @param[in]  c     String with color name.
+	*
+	* @return     Return a Color corresponding to the string parameter.
+	*/
+	Color * getColor(std::string c);
 }
 
 #endif

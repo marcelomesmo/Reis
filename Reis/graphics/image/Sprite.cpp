@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-Sprite::Sprite(std::string path, Color* transparent)
+Sprite::Sprite(std::string path, Color* transparent/*, std::string ID, std::string type) : Resource(ID, path, type*/)
 {
 	create(path, transparent);
 }
@@ -10,6 +10,7 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+	//std::cout << "DEBUG: Sprite is dead." << std::endl;
 	free();
 }
 
@@ -202,7 +203,7 @@ void Sprite::free()
 void Sprite::draw(int x, int y, Flip flipped)
 {
 	//Set rendering space and render to screen
-	graphicsBox = { x - (((float)anchorX / (float)100) * this->width), y - (((float)anchorY / (float)100) * this->height), this->width, this->height };
+	graphicsBox = { x - (int)(((float)anchorX / (float)100) * this->width), y - (int)(((float)anchorY / (float)100) * this->height), this->width, this->height };
 	// Will generate a Warning while compiling. Ignore it.
 
 	//Set clip rendering dimensions

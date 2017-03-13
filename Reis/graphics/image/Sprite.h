@@ -14,10 +14,10 @@
  *
  * @author     marcelomesmo
  */
-class Sprite
+class Sprite : public Resource
 {
 public:
-	Sprite(std::string path, Color* transparent = Color::Cyan);
+	Sprite(std::string path, Color* transparent = Color::Cyan/*, std::string ID = "", std::string type = "ISprite"*/);
 	Sprite();
 	~Sprite();
 	
@@ -219,8 +219,7 @@ protected:
 
 	/// Which part of the image is printed onscreen.
 	//
-	//	Normally it's the whole image, but you can clip()
-	//	it if you like.
+	//	Normally it's the whole image, but you can clip() it if you like.
 	SDL_Rect* clipRect;
 	// Auxiliar rect for drawing
 	SDL_Rect graphicsBox;

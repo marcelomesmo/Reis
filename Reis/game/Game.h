@@ -7,7 +7,7 @@ using namespace std;
 
 #include "../graphics/Graphics.h"
 #include "../input/Input.h"
-#include "../data/Timer.h"
+#include "../data/timer/Clock.h"
 
 /// Scene foward declaration to resolve circular depedency.
 class Scene;
@@ -157,7 +157,7 @@ private:
 	/**
 	 * Variables to cap frame rate.
 	 */
-	Timer capTimer;
+	Clock capTimer;
 	int frameTicks;				// ticks since last frame
 	bool doCapFrame;			// true in case we want to Cap Frame Rate
 	int screenTargetFPS;		// target FPS
