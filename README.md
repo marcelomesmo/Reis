@@ -7,7 +7,7 @@ Refactoring code since *February*, 2016.
   
 See the [Wiki](https://github.com/marcelomesmo/Reis/wiki) for full documentation, examples and other information.  
 Doxygen available [here](http://marcelomesmo.github.io/Reis-doxygen/html/index.html).  
-Download most recent Lib version [here]().  
+Download most recent Lib version [here](https://www.dropbox.com/s/f3foxri3ktqql3z/Reis-lib-v1.0.rar?dl=0).  
   
 Current version 0.0.1 - February, 2016.  
   
@@ -65,12 +65,15 @@ Changed Sprite creation.
 Added anchor support to Sprite.  
   
 13/03/2017
-Renamed Timer to Clock.
-Changed Sprite, Animation and SpriteSheet inheritance.
-Added Resouce to Resources.
-Added ResouceHolder to Resources.
-Added ResouceManager to Resources.
-Added XML support to Resources.
+Renamed Timer to Clock.  
+Added Resouce to Resources.  
+Changed Sprite, Animation and SpriteSheet inheritance.  
+Added ResouceHolder to Resources.  
+Added ResouceManager to Resources.  
+Added XML support to Resources.  
+  
+24/04/2017  
+Added color key support to MusseXMLParser.  
   
   </br>
 Feel free to make contributions.  
