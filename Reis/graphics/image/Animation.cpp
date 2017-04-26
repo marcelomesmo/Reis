@@ -16,7 +16,7 @@ Animation::Animation()
 
 Animation::~Animation()
 {
-	//std::cout << "DEBUG: Animation is dead." << std::endl;
+
 }
 
 bool Animation::create(SpriteSheet* sheet, int count, int frames, int duration)
@@ -35,7 +35,7 @@ bool Animation::create(SpriteSheet* sheet, std::vector<std::pair<int, int>> shee
 	// Duration vector has same size than SheetPos vector
 	if (sheetPos.size() != duration.size())
 	{
-		printf("ERROR: sheetPos and duration have invalid sizes (duration must be same size of sheetPos)\n");
+		printf("ERROR: [Animation::create] sheetPos and duration have invalid sizes (duration must be same size of sheetPos)\n");
 		return false;
 	}
 	std::vector<int> count;
@@ -51,7 +51,7 @@ bool Animation::create(SpriteSheet* sheet, std::vector<int> count, std::vector<i
 	// Duration vector must have same size than Count vector
 	if (count.size() != duration.size())
 	{
-		printf("ERROR: count and duration have invalid sizes (duration must be the same size of count)\n");
+		printf("ERROR: [Animation::create] count and duration have invalid sizes (duration must be the same size of count)\n");
 		return false;
 	}
 	// For every position (count and duration must have same size) add to Animation
@@ -61,11 +61,18 @@ bool Animation::create(SpriteSheet* sheet, std::vector<int> count, std::vector<i
 bool Animation::create(SpriteSheet* sheet, std::string name, int duration)
 {
 	// Invalid Clip or Animation dont exist for that name
-	if (!sheet->clipExist(name)) return false;
+	if (!sheet->hasAnimation(name)) return false;
 
-	std::vector<SDL_Rect*> clips = sheet->getClip(name);
+	std::vector<Sprite_Xml> sprites = sheet->getAnimation(name);
 
-	for( unsigned int i = 0; i < clips.size(); i++) addFrame(sheet, clips.at(i), duration);
+	if (sprites.size() <= 0) {
+		std::cout << "ERROR: [Animation::create] Couldn't create Animation using Xml. Sprites not found.\n";
+		return false;
+	}
+
+	for( unsigned int i = 0; i < sprites.size(); i++) addFrame(sheet, sprites.at(i), duration);
+
+	//Sucess create anim
 	return true;
 }
 
@@ -78,7 +85,6 @@ bool Animation::addFrame(SpriteSheet* sheet, int count, int duration)
 	this->total_frames++;
 	this->duration.push_back(duration);
 
-	//printf("DEBUG: Added frame %i to animation.\n", sprites.size());
 	return true;
 }
 bool Animation::addFrame(SpriteSheet* sheet, int sheetPosX, int sheetPosY, int duration)
@@ -95,10 +101,26 @@ bool Animation::addFrame(SpriteSheet* sheet, SDL_Rect* clip, int duration)
 	this->total_frames++;
 	this->duration.push_back(duration);
 
-	//printf("DEBUG: Added frame %i to animation.\n", sprites.size());
 	return true;
 }
+bool Animation::addFrame(SpriteSheet* sheet, Sprite_Xml s, int duration)
+{
+	Sprite novo;
+	if (!novo.create(sheet, s.clip)) return false;
 
+	novo.setAnchorX(s.ancX);
+	novo.setAnchorY(s.ancY);
+	
+	novo.setResourceID(s.name);
+	novo.setResourceFilePath(s.name);
+	novo.setResourceType("Sprite");
+
+	this->sprites.push_back(novo);
+	this->total_frames++;
+	this->duration.push_back(duration);
+
+	return true;
+}
 void Animation::draw(int x, int y, Flip flipped)
 {
 	if (running && total_frames > 0)
@@ -129,7 +151,7 @@ void Animation::setAutoRepeat(bool repeat) { this->autoRepeat = repeat; }
 void Animation::setDuration(int count, int new_duration)
 { 
 	if(count < 0 || (unsigned int) count > this->duration.size() - 1){
-		printf("ERROR: Can't change duration: invalid frame in Animation.\n");
+		printf("ERROR: [Animation::setDuration] Can't change duration: invalid frame in Animation.\n");
 		return;
 	}
 	this->duration.at(count) = new_duration; 

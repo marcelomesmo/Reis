@@ -45,7 +45,7 @@ void Graphics::init(const char* title, int width, int height, bool set_fullscree
 	setColor(Color::White);
 	setBgColor(Color::Black);
 
-	//printf("DEBUG: Success init graphics\n");
+	//Success init graphics
 }
 
 void Graphics::free()
@@ -76,7 +76,7 @@ void Graphics::free()
 	IMG_Quit();
 	SDL_Quit();
 
-	//printf("DEBUG: Success close graphics\n");
+	//Success close graphics
 }
 
 void Graphics::reset()
@@ -94,13 +94,13 @@ void Graphics::begin()
 	SDL_SetRenderDrawColor(renderer, bgColor->r, bgColor->g, bgColor->b, bgColor->a);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_RenderClear(renderer);
-	//printf("Success open batch\n");
+	//Success open batch
 }
 void Graphics::end()
 {
 	//Update screen
 	SDL_RenderPresent(renderer);
-	//printf("Success close batch\n");
+	//Success close batch
 }
 
 
@@ -237,7 +237,7 @@ void Graphics::drawEllipse(int x, int y, int rx, int ry)
 	*/
 	if ((rx < 0) || (ry < 0)) {
 		//return (-1);
-		printf("ERROR: Couldn't print Circle : Invalid Radius ERROR\n");
+		printf("ERROR: [Graphics] Couldn't print Circle : Invalid Radius ERROR\n");
 	}
 
 	/*
@@ -382,7 +382,7 @@ void Graphics::drawFilledEllipse(int x, int y, int rx, int ry)
 	* Sanity check radii
 	*/
 	if ((rx < 0) || (ry < 0)) {
-		printf("ERROR: Couldn't print Circle : Invalid Radius ERROR\n");
+		printf("ERROR: [Graphics] Couldn't print Circle : Invalid Radius ERROR\n");
 	}
 
 	/*

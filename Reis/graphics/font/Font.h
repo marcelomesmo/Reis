@@ -3,6 +3,7 @@
 
 #include <SDL_ttf.h>
 #include <string>
+#include <iostream>
 
 /**
  * @brief      TrueTypeFont (.ttf) implementation. 

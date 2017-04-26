@@ -17,7 +17,7 @@
 class Sprite : public Resource
 {
 public:
-	Sprite(std::string path, Color* transparent = Color::Cyan/*, std::string ID = "", std::string type = "ISprite"*/);
+	Sprite(std::string path, Color* transparent = Color::Cyan);
 	Sprite();
 	~Sprite();
 	

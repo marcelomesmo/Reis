@@ -5,16 +5,24 @@
 #include "rapidxml/rapidxml_utils.hpp"
 using namespace rapidxml;
 
+#include <sstream>
 #include <vector>
 #include <iostream>
-#include <sstream>
 
 #include <SDL.h>
 
-#include "..\..\graphics\Color.h"
+#include "../../graphics/Color.h"
+
+struct Sprite_Xml
+{
+	std::string name;
+	SDL_Rect* clip;
+	int ancX;
+	int ancY;
+};
 
 /**
- * @brief      XMLParser in C++ to read MuSSE's XML files.
+ * @brief      XMLParser in C++ to read MuSSE's XML files. Work as ResourceManager for MuSSE files.
  *
  * @author     marcelomesmo
  */
@@ -31,21 +39,23 @@ public:
 	bool parseXmlFile(const char src[]);
 
 	/**
-	 * @brief      Get the name and clips for Animations in the XML.
+	 * @brief      Get all meta-data for sprites in the xml using an Animation name.
 	 *
-	 * @return     A vector containing all the Sprites meta-data organized by:
-	 *             animation_name, sprite_clip.
+	 * @param[in]  name  Animation name.
+	 *
+	 * @return     True if loaded successfully.
 	 */
-	std::vector<std::pair<std::string, SDL_Rect*>> getClips();
-	//std::vector<Sprite_XML> getClips();
-	/* struct Sprite_XML{
-		std::string anim_name;
-		SDL_Rect* clip;
-		Point anchor;
-	};
-	em cima da funcao
-	*/
+	std::vector<Sprite_Xml> getSpritesData(std::string name);
 	
+	/**
+	 * @brief      Check if an Animation exist in xml.
+	 *
+	 * @param[in]  name  Animation name.
+	 *
+	 * @return     True if Animation exist.
+	 */
+	bool hasAnimation(std::string name);
+
 	/**
 	 * @brief      Get the SpriteSheet image path.
 	 *
@@ -65,12 +75,11 @@ private:
 	// XML document to be parsed
 	xml_document<> doc;
 	xml_node<> *spritesheet;
+		std::string sheet_name;
+		Color* colorkey;
+		int width, height;
+	
 	xml_node<> *animations;
-
-	std::string sheet_name;
-	Color* colorkey;
-	int width, height;
-
 };
 
 #endif

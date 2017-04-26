@@ -5,6 +5,8 @@
 #include "rapidxml/rapidxml_utils.hpp"
 using namespace rapidxml;
 
+#include <sstream>
+
 #include "../resource/ResourceHolder.h"
 
 /**

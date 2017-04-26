@@ -21,19 +21,19 @@ Color::Color(int red, int green, int blue, int alpha)
 	 * Set to 0 if invalid.
 	 */
 	if (red < 0 || red > 255) {
-		printf("ERROR: Invalid Color Red value. Must be between 0 and 255.\n");
+		printf("ERROR: [Color] Invalid Color Red value. Must be between 0 and 255.\n");
 		red = (red < 0) ? 0 : 255;
 	}
 	if (green < 0 || green > 255) {
-		printf("ERROR: Invalid Color Green value. Must be between 0 and 255.\n");
+		printf("ERROR: [Color] Invalid Color Green value. Must be between 0 and 255.\n");
 		green = (green < 0) ? 0 : 255;
 	}
 	if (blue < 0 || blue > 255) {
-		printf("ERROR: Invalid Color Blue value. Must be between 0 and 255.\n");
+		printf("ERROR: [Color] Invalid Color Blue value. Must be between 0 and 255.\n");
 		blue = (blue < 0) ? 0 : 255;
 	}
 	if (alpha < 0 || alpha > 255) {
-		printf("ERROR: Invalid Color Alpha value. Must be between 0 and 255.\n");
+		printf("ERROR: [Color] Invalid Color Alpha value. Must be between 0 and 255.\n");
 		alpha = (alpha < 0) ? 0 : 255;
 	}
 	this->r = red;

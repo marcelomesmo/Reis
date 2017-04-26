@@ -16,11 +16,13 @@ bool ResourceManagerParser::parseXmlFile(const char src[])
 
 	assets = doc.first_node();
 
-	//std::cout << "DEBUG: Root element : " << assets->name() << "\n";
-	//std::cout << "----------------------------" << "\n";
+	if (assets->first_attribute("pack") == 0)
+	{
+		std::cout << "ERROR: [RMParser::parse] Pack name not found in file [" << assets->name() << "].\n";
+		return false;
+	}
 
 	this->pack_name = assets->first_attribute("pack")->value();
-	//std::cout << "DEBUG: Pack name: " << pack_name << "\n\n";
 
 	// Get a list of Scene elements
 	scenes = assets->first_node("scene");
@@ -53,14 +55,12 @@ bool ResourceManagerParser::getResourcesData(std::string scene)
 
 		if(scene_name == scene)
 		{
-			//std::cout << "\nDEBUG: Current element : " << scene_name << std::endl;
 
 			// Get a NodeList of Resource elements for the scene
 			novo.first = scene_name;
 			novo.second = scenes->first_node("resource");
 
 			resources.push_back(novo);
-			//std::cout << "DEBUG: Added list for scene : " << scene_name << std::endl;
 
 			return true;
 		}
@@ -169,8 +169,7 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 						holder.listaSprites.push_back({ s, scene });
 
 						// Found the resource, finish
-						//std::cout << "DEBUG: Successful create resource [" << type << "] id [" << id << "] for scene [" << scene << "]\n";
-
+						
 						// Save last loaded resource ID
 						currentID = id;
 						return true;
@@ -256,7 +255,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 						holder.listaSpriteSheet.push_back({ s, scene });
 
 						// Found the resource, finish
-						//std::cout << "DEBUG: Successful create resource [" << type << "] id [" << id << "] for scene [" << scene << "]\n";
 						
 						// Save last loaded ID
 						currentID = id; 
@@ -337,8 +335,7 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 								holder.listaSprites.push_back({ s, scene });
 
 								// Found the resource, finish
-								//std::cout << "DEBUG: Successful create resource [" << type << "] id [" << id << "] for scene [" << scene << "]\n";
-
+								
 								// Save last loaded ID
 								currentID = id; 
 								return true;
@@ -361,7 +358,7 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 							// SpriteSheet found
 							if (findSheet.first->getResourceID() == path)
 							{
-								// Create Animation (using name duration)
+								// Create Animation (using name duration) from MuSSE 
 								if (r.second->first_node("name") != 0 && r.second->first_node("duration") != 0)
 								{
 									std::string name = r.second->first_node("name")->value();
@@ -468,7 +465,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										value2 = -1;
 										std::istringstream(pos_list) >> value1;
 										pos_list.erase(0, pos_list.find(',') + 1);
-										//std::cout << "DEBUG: value1: " << value1;
 
 										std::istringstream(pos_list) >> value2;
 										// Deal with missing values before continuing
@@ -482,7 +478,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										pos.push_back({ value1, value2 });
 										//Erase all element including comma
 										pos_list.erase(0, pos_list.find(',') + 1);
-										//std::cout << "DEBUG: value2: " << value2 << std::endl;
 									}
 									// Parser for duration list string
 									int value;
@@ -501,7 +496,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										}
 										dur.push_back(value);
 										duration_list.erase(0, duration_list.find(',') + 1);
-										//std::cout << "DEBUG: value: " << value << std::endl;
 									}
 									value = -1;
 									// Grab last value
@@ -514,7 +508,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										return false;
 									}
 									dur.push_back(value);
-									//std::cout << "DEBUG: value: " << value << std::endl;
 
 									if (!a->create(findSheet.first, pos, dur))
 									{
@@ -558,7 +551,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										}
 										count.push_back(valueC);
 										count_list.erase(0, count_list.find(',') + 1);
-										//std::cout << "DEBUG: value: " << valueC << std::endl;
 									}
 									valueC = -1;
 									// Grab last value
@@ -571,7 +563,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										return false;
 									}
 									count.push_back(valueC);
-									//std::cout << "DEBUG: value: " << valueC << std::endl;
 									// Parser for duration list string
 									int value;
 									// Grab values before last comma ','
@@ -589,7 +580,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										}
 										dur.push_back(value);
 										duration_list.erase(0, duration_list.find(',') + 1);
-										//std::cout << "DEBUG: value: " << value << std::endl;
 									}
 									value = -1;
 									// Grab last value
@@ -602,7 +592,6 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 										return false;
 									}
 									dur.push_back(value);
-									//std::cout << "DEBUG: value: " << value << std::endl;
 
 									if (!a->create(findSheet.first, count, dur))
 									{
@@ -626,8 +615,7 @@ bool ResourceManagerParser::loadNext(ResourceHolder & holder, std::string scene,
 								holder.listaAnimation.push_back({ a, scene });
 
 								// Found the resource, finish
-								//std::cout << "DEBUG: Successful create resource [" << type << "] id [" << id << "] for scene [" << scene << "]" << std::endl;
-
+								
 								// Save last loaded ID
 								currentID = id; 
 								return true;

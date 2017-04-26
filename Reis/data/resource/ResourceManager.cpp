@@ -34,8 +34,6 @@ bool ResourceManager::init(std::string scene)
 	}
 
 	// Success loading
-		//std::cout << "DEBUG: Opening pack : " << parsed_xml.getName() << std::endl;
-		//std::cout << "DEBUG: Initiating Scene : " << scene << std::endl;
 	
 	// Count resources for the scene
 		int total_resources_in_scene = parsed_xml.getResourcesCount(scene);
@@ -56,15 +54,9 @@ bool ResourceManager::init(std::string scene)
 		*/
 		// Scene is new, proceed.
 		totalAmmount.insert({scene, total_resources_in_scene});
-		//std::cout << "DEBUG: Total resources in scene " << scene << " [" << totalAmmount.find(scene)->second << "]\n";
 
 		int current_resource_loaded = 0;
 		currentIndex.insert({ scene, current_resource_loaded });
-		//std::cout << "DEBUG: Current loaded    [" << currentIndex.find(scene)->second << "]\n";
-		
-		//std::cout << "DEBUG: Remaining resources [" << (totalAmmount.find(scene)->second - currentIndex.find(scene)->second) << "]\n";
-
-		//std::cout << "DEBUG: Total resources in list    [" << parsed_xml.getResourcesCount() << "]\n";
 
 	return true;
 }
@@ -229,7 +221,6 @@ void ResourceManager::end(std::string scene)
 		// Check if resource belongs to scene
 		if (sprites->second == scene) {
 			// Remove
-			//std::cout << "DEBUG: Freeing resource : " << sprites->first->getResourceID() << std::endl;
 			if (sprites->first != NULL) {
 				sprites->first->free();
 				delete sprites->first;
@@ -243,7 +234,6 @@ void ResourceManager::end(std::string scene)
 
 			sprites = holder.listaSprites.erase(sprites);
 			// Vector (C++11) self adjusts positions
-			//std::cout << "DEBUG: Loaded sprites size [" << holder.listaSprites.size() << "]\n";
 		}
 		// Skip resources that don't belong to the scene
 		else ++sprites;
@@ -261,7 +251,6 @@ void ResourceManager::end(std::string scene)
 		// Check if resource belongs to scene
 		if (anims->second == scene) {
 			// Remove
-			//std::cout << "DEBUG: Freeing resource : " << anims->first->getResourceID() << std::endl;
 
 			if (anims->first != NULL) {
 				delete anims->first;
@@ -273,7 +262,6 @@ void ResourceManager::end(std::string scene)
 			
 			anims = holder.listaAnimation.erase(anims);
 			// Vector (C++11) self adjust positions
-			//std::cout << "DEBUG: Loaded animations size [" << holder.listaAnimation.size() << "]\n";
 		}
 		// Skip resources that don't belong to the scene
 		else ++anims;
@@ -291,7 +279,6 @@ void ResourceManager::end(std::string scene)
 		// Check if resource belongs to scene
 		if (sheets->second == scene) {
 			// Remove
-			//std::cout << "DEBUG: Freeing resource : " << sheets->first->getResourceID() << std::endl;
 			if (sheets->first != NULL) {
 				sheets->first->free();
 				delete sheets->first;
@@ -303,7 +290,6 @@ void ResourceManager::end(std::string scene)
 
 			sheets = holder.listaSpriteSheet.erase(sheets);
 			// Vector (C++11) self adjust positions
-			//std::cout << "DEBUG: Loaded sheets size [" << holder.listaSpriteSheet.size() << "]\n";
 		}
 		// Skip resources that don't belong to the scene
 		else ++sheets;

@@ -10,7 +10,6 @@ SpriteSheet::SpriteSheet()
 
 SpriteSheet::~SpriteSheet()
 {
-	//std::cout << "DEBUG: SpriteSheet is dead." << std::endl;
 	free();
 }
 void SpriteSheet::free()
@@ -76,33 +75,27 @@ bool SpriteSheet::create(std::string path, int sprite_width, int sprite_height, 
 	}
 	// Get how many Sprites we have in the Sprite Sheet (include empty spaces)
 	this->size = spriteClips.size();
-	//printf("DEBUG: Spritesheet %ix%i size: %i\n", lines, columns, size);
+	isXmlLoaded = false;
 	return true;
 }
 // Load Sprite Sheets using a XML metadata for the Sprites
-// Supports: MuSSEXmlParser.
+// Support: MuSSEXmlParser.
 bool SpriteSheet::create(std::string path, std::string musse_xml_path)
 {
-	// Open the parser
-	MuSSEXmlParser parsed_xml;
-	if(!parsed_xml.parseXmlFile(musse_xml_path.c_str())) return false;
-
-	// Create a Sprite with specified image path
-	if (!initImage(path/*parsed_xml.getPath(), parsed_xml.getColorKey()*/)) return false;
-
-	// Get the clips
-	this->spriteClipsFromXml = parsed_xml.getClips();
-	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml) spriteClips.push_back(s.second);
-
-	this->size = spriteClipsFromXml.size();
-
-	// Couldn't read animations
-	if (this->size <= 0) {
-		printf("ERROR: Couldn't get clips for Animations from XML.\n");
+	// Open parser and load xml
+	if (!parsed_xml.parseXmlFile(musse_xml_path.c_str())) {
+		std::cout << "ERROR: [SS::MUSSE::create] Couldn't open file [" << musse_xml_path << "]" << std::endl;
 		return false;
 	}
 
-	//printf("DEBUG: Spritesheet %s size: %i\n", parsed_xml.getName().c_str(), size);
+	// Create a Spritesheet with specified image path and color key
+	if (!initImage(path, parsed_xml.getColorKey())) {
+		std::cout << "ERROR: [SS::MUSSE::create] Couldn't create sprite sheet with path [" << path << "]" << std::endl;
+		return false;
+	}
+
+	isXmlLoaded = true;
+
 	return true;
 }
 
@@ -129,57 +122,36 @@ SDL_Rect* SpriteSheet::getClip(int sheetPosX, int sheetPosY)
 {
 	int count = getSpriteCountByPos(sheetPosX, sheetPosY);
 	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("ERROR: Invalid sprite frame position %i \n", count);
+		printf("ERROR: [SS::getClip] Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	//printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
 SDL_Rect* SpriteSheet::getClip(int count)
 {
 	if (count < 0 || (unsigned)count > spriteClips.size() - 1) {
-		printf("ERROR: Invalid sprite frame position %i \n", count);
+		printf("ERROR: [SS::getClip] Invalid sprite frame position %i \n", count);
 		return spriteClips[0];
 	}
-	//printf("DEBUG: Pos X: %d Pos Y: %d Width: %d Height: %d \n", spriteClips[count]->x, spriteClips[count]->y, spriteClips[count]->w, spriteClips[count]->h);
 	return spriteClips[count];
 }
-std::vector<SDL_Rect*> SpriteSheet::getClip(std::string name)
+std::vector<Sprite_Xml> SpriteSheet::getAnimation(std::string name)
 {
-	std::vector<SDL_Rect*> novo;
-
-	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
-	{
-		if (s.first == name){
-			novo.push_back(s.second);
-		}
-	}
-
-	//printf("DEBUG: Clips for Animation %s returned. Frames Quantity: %d \n", name.c_str(), novo.size());
-	return novo;
+	return parsed_xml.getSpritesData(name);
 }
-bool SpriteSheet::clipExist(std::string name)
+bool SpriteSheet::hasAnimation(std::string name)
 {
 	// Check if Sprite Sheet has been read from Xml
-	if (spriteClipsFromXml.size() <= 0) {
-		printf("ERROR: Sprite Sheet ain't loaded from Xml or error occurred while loading animations.\n");
+	if (!isXmlLoaded) {
+		std::cout << "ERROR: [SS::hasAnim] Sprite Sheet ain't loaded from Xml.\n";
 		return false;
 	}
 
-	// Check if theres a animation with that name
-	bool hasAnim = false;
-	for (std::pair<std::string, SDL_Rect*> s : spriteClipsFromXml)
-	{
-		if (s.first == name){
-			hasAnim = true;
-			break;
-		}
-	}
-	if (!hasAnim) {
-		printf("ERROR: There is no Animation with name %s.\n", name.c_str());
+	if (!parsed_xml.hasAnimation(name)) {
+		std::cout << "ERROR: [SS::hasAnim] There is no Animation with name "<< name << ".\n";
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -206,7 +178,7 @@ bool SpriteSheet::initImage(std::string path, Color* transparent)
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
 	{
-		printf("ERROR: Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		printf("ERROR: [SS::initImage] Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
 	}
 	else
 	{
@@ -214,7 +186,7 @@ bool SpriteSheet::initImage(std::string path, Color* transparent)
 		SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_RGBA8888, NULL);
 		if (formattedSurface == NULL)
 		{
-			printf("ERROR: Unable to convert loaded surface to display format! %s\n", SDL_GetError());
+			printf("ERROR: [SS::initImage] Unable to convert loaded surface to display format! %s\n", SDL_GetError());
 		}
 		else
 		{
@@ -222,7 +194,7 @@ bool SpriteSheet::initImage(std::string path, Color* transparent)
 			newTexture = SDL_CreateTexture(Graphics::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h);
 			if (newTexture == NULL)
 			{
-				printf("ERROR: Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
+				printf("ERROR: [SS::initImage] Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
 			}
 			else
 			{
@@ -271,7 +243,6 @@ bool SpriteSheet::initImage(std::string path, Color* transparent)
 	}
 
 	//Return success
-	//printf("DEBUG: Sucessfully loaded image: %s\n", path.c_str());
 	image = newTexture;
 	return image != NULL;
 }

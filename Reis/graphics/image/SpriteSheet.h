@@ -1,7 +1,6 @@
 #ifndef SPRITESHEET_H
 #define SPRITESHEET_H
 
-#include <vector>
 #include "../Graphics.h"
 #include "../../data/xml/MuSSEXmlParser.h"
 #include "../../data/resource/Resource.h"
@@ -56,10 +55,10 @@ public:
 	SDL_Rect* getClip(int sheetPosX, int sheetPosY);
 	// Get a Sprite clip in count position in the SpriteSheet.
 	SDL_Rect* getClip(int count);
-	// Check if an Animation exists in the SpriteSheet.
-	bool clipExist(std::string name);
-	// Get a set of Sprite clips by Animation name from the XML.
-	std::vector<SDL_Rect*> getClip(std::string name);
+	// Get a set of Sprite clips by Animation using MuSSE xml data.
+	std::vector<Sprite_Xml> getAnimation(std::string name);
+	// Check if an Animation exists in MuSSE spritesheet.
+	bool hasAnimation(std::string name);
 
 	/**
 	 * @brief      Get a Sprite clip ordered count position based on the Sprite
@@ -121,14 +120,15 @@ private:
 	int width;
 	int height;
 
-	// Used for fixed size Sprite Sheets
-	std::vector<SDL_Rect*> spriteClips;
-	// Used for multi size Sprite Sheets (read from XML)
-	std::vector<std::pair<std::string, SDL_Rect*>> spriteClipsFromXml;
 	int size;
 	int columns;
 	int lines;
 
+	// Used for fixed size Sprite Sheets
+	std::vector<SDL_Rect*> spriteClips;
+	// Used for multi size Sprite Sheets (read from XML)
+	MuSSEXmlParser parsed_xml;
+	bool isXmlLoaded;
 };
 
 #endif

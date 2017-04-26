@@ -2,44 +2,42 @@
 
 bool MuSSEXmlParser::parseXmlFile(const char src[])
 {
-	// Creates a rapidxml::File to read Files
-	//file<> xmlFile(src); // Default template is char
-	// Parse new document using a RapidXml representation of the XML file
-	// doc.parse<0>(xmlFile.data());
-
-	// (above code) Has been replaced by:
-
-	// New code
 	std::ifstream file(src);
 	buffer << file.rdbuf();
 	file.close();
 	content = buffer.str();
 	if (content.size() == 0)
 	{
-		printf("ERROR: Failed to load XML src file.\n");
+		std::cout << "ERROR: [MUSSEParser::parse] Failed to load XML src file.\n";
 		return false;
 	}
 
 	doc.parse<0>(&content[0]);
-	// This is done to keep a outside file saved. So we can split into 2 different methods. 
-	// (above solution is more elegant but was causing file to be erased after method end)
 
-	// Get SpriteSheet element
 	spritesheet = doc.first_node();
 
-	//cout << "DEBUG: Root element : " << spritesheet->name() << "\n";
-	//cout << "----------------------------" << "\n";
+	if (spritesheet->first_attribute("image_name") == 0 ||
+		spritesheet->first_attribute("width") == 0 ||
+		spritesheet->first_attribute("height") == 0)
+	{
+		std::cout << "ERROR: [MUSSEParser::parse] Image name, width or height not found in file [" << spritesheet->name() << "].\n";
+		return false;
+	}
+	if (spritesheet->first_attribute("ck_r") == 0 ||
+		spritesheet->first_attribute("ck_g") == 0 ||
+		spritesheet->first_attribute("ck_b") == 0)
+	{
+		std::cout << "ERROR: [MUSSEParser::parse] Colorkey values not found in file [" << spritesheet->name() << "].\n";
+		return false;
+	}
 
 	this->sheet_name = spritesheet->first_attribute("image_name")->value();
-	//cout << "DEBUG: SpriteSheet image path: " << sheet_name << "\n";
 	this->width = atoi( spritesheet->first_attribute("width")->value() );
 	this->height = atoi( spritesheet->first_attribute("height")->value() );
-	//cout << "DEBUG: SpriteSheet width: " << width << " height: " << height << "\n";
 	int r = atoi( spritesheet->first_attribute("ck_r")->value() );
 	int g = atoi( spritesheet->first_attribute("ck_g")->value() );
 	int b = atoi( spritesheet->first_attribute("ck_b")->value() );
 	this->colorkey = new Color(r, g, b);
-	//cout << "DEBUG: SpriteSheet color key: r " << r << " g " << g << " b " << b << "\n";
 
 	// Get a list of Animation elements
 	animations = spritesheet->first_node("animation");
@@ -47,44 +45,97 @@ bool MuSSEXmlParser::parseXmlFile(const char src[])
 	return true;
 }
 
-std::vector<std::pair<std::string, SDL_Rect*>> MuSSEXmlParser::getClips()
+std::vector<Sprite_Xml> MuSSEXmlParser::getSpritesData(std::string name)
 {
-	// A vector with animation names and clips
-	std::vector<std::pair<std::string, SDL_Rect*>> novo;
-
 	std::string anim_name;
-		// Inside each animation we have a vector of sprites with : posX, posY, w, h, clip and name of each sprite
-		xml_node<>* sprites; 
-			std::string sprite_name;
-			int posX, posY, w, h;
-			SDL_Rect* clip;
+	// Inside each animation we have a vector of sprites with : posX, posY, w, h, anchorX, anchorY and name of each sprite
+	xml_node<>* spriteList;
+		std::string sprite_name;
+		int posX, posY, w, h, ancX, ancY;
+		SDL_Rect* clip;
+	
+	std::vector<Sprite_Xml> sprites;
 
+	xml_node<>* animList = animations;
+	
 	// Iterate a List of Animation elements
-	for (animations; animations; animations = animations->next_sibling())
+	for (animList; animList; animList = animList->next_sibling())
 	{
-		// cout << "DEBUG: Current element : " << animations->first_attribute()->value() << "\n";
-		anim_name = animations->first_attribute()->value();
+		if (animList->first_attribute("name") == 0 )
+		{
+			std::cout << "ERROR: [MUSSEParser::getSprites] Animation name not found in file [" << spritesheet->name() << "].\n";
+			break;
+		}
+		anim_name = animList->first_attribute()->value();
 
-			// Get a NodeList of Sprite elements
-			sprites = animations->first_node("sprite");
+		if (anim_name == name)
+		{
+			// Get a NodeList of Sprite elements for that animation
+			spriteList = animList->first_node("sprite");
 
 			// For each Sprite
-			for (sprites; sprites; sprites = sprites->next_sibling())
+			for (spriteList; spriteList; spriteList = spriteList->next_sibling())
 			{
-				// Get Sprite name, position and size
-				sprite_name = sprites->first_attribute()->value();
-				posX = std::stoi(sprites->first_node("offset_x")->value());
-				posY = std::stoi(sprites->first_node("offset_y")->value());
-				w = std::stoi(sprites->first_node("width")->value());
-				h = std::stoi(sprites->first_node("height")->value());
 
+				// Create Animation (using name duration) from MuSSE 
+				if (spriteList->first_attribute("name") == 0)
+				{
+					std::cout << "ERROR: [MUSSEParser::getSprites] Sprite name not found in file [" << spritesheet->name() << "] for anim [" << anim_name << "].\n";
+					break;
+				}
+
+				if( spriteList->first_node("offset_x") == 0 || spriteList->first_node("offset_y") == 0 ||
+					spriteList->first_node("width") == 0 || spriteList->first_node("height") == 0 ||
+					spriteList->first_node("anchor_x") == 0 || spriteList->first_node("anchor_y") == 0)
+				{
+					std::cout << "ERROR: [MuSSEParser::getSprites] Sprite offset_x, offset_y, width, height, anchor_x or anchor_y not found in file [" << spritesheet->name() << "] for anim [" << anim_name << "].\n";
+					break;
+				}
+
+				Sprite_Xml novo;
+				// Get Sprite name, position and size
+				sprite_name = spriteList->first_attribute()->value();
+				posX = std::stoi(spriteList->first_node("offset_x")->value());
+				posY = std::stoi(spriteList->first_node("offset_y")->value());
+				w = std::stoi(spriteList->first_node("width")->value());
+				h = std::stoi(spriteList->first_node("height")->value());
+				ancX = std::stoi(spriteList->first_node("anchor_x")->value());
+				ancY = std::stoi(spriteList->first_node("anchor_y")->value());
+
+				// sprite = new Sprite(sprite_name, posX, posY, w, h, ancX, ancY);
 				clip = new SDL_Rect({ posX, posY, w, h });
 
-				novo.push_back({ anim_name, clip });
-			}
-	}
+				novo.name = sprite_name;
+				novo.clip = clip;
+				novo.ancX = ancX;
+				novo.ancY = ancY;
 
-	return novo;
+				sprites.push_back(novo);
+			}
+
+			return sprites;
+		}
+	}
+	return sprites;
+}
+
+// Check if a Animation exist in xml.
+bool MuSSEXmlParser::hasAnimation(std::string name)
+{
+	std::string anim_name;
+	xml_node<>* animList = animations;
+
+	// Iterate a List of Animation elements
+	for (animList; animList; animList = animList->next_sibling())
+	{
+		anim_name = animList->first_attribute()->value();
+		
+		if (anim_name == name)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 std::string MuSSEXmlParser::getName() { return this->sheet_name; }

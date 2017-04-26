@@ -14,8 +14,7 @@ void Input::init()
 	this->mouseDirY = 0;
 
 	// Inits controller subsystem
-	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0) printf("ERROR: Failed to init Controller!\n");
-	//else printf("DEBUG: Success init Controller\n");
+	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0) printf("ERROR: [Input] Failed to init Controller!\n");
 
 	numControllers = 0;
 	lockInput(InputType::CONTROLLER);	// Init all controllers locked
@@ -35,7 +34,7 @@ void Input::init()
 	// Inits input
 	this->do_quit = false;
 
-	//printf("DEBUG: Success to init Input\n");
+	//Success to init Input
 }
 
 void Input::free()
@@ -73,7 +72,7 @@ void Input::free()
 	// Close Controller subsystem
 	SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 
-	//printf("DEBUG: Success close input\n");
+	//Success close input
 }
 
 // Clear the state of the keys
@@ -123,7 +122,6 @@ void Input::update()
 			break;
 
 		case SDL_KEYDOWN:
-			//DEBUG WITH : keyToString(event.key.keysym.scancode); printf("down\n");
 			if (this->isKeyboardLocked) break;
 			// First, check if key isn't alreadly pressed (to avoid repetitive keyPresses while key is down)
 			if (!keyDown[event.key.keysym.scancode]) keyPressed[event.key.keysym.scancode] = true;
@@ -131,21 +129,18 @@ void Input::update()
 			break;
 
 		case SDL_KEYUP:
-			//DEBUG WITH : keyToString(event.key.keysym.scancode); printf("released\n");
 			if (this->isKeyboardLocked) break;
 			keyReleased[event.key.keysym.scancode] = true;
 			keyDown[event.key.keysym.scancode] = false;
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			//DEBUG WITH : mouseToString(event.button); printf("down\n");
 			if (this->isMouseLocked) break;
 			if (!mouseDown[event.button.button]) mousePressed[event.button.button] = true;
 			mouseDown[event.button.button] = true;
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			//DEBUG WITH : mouseToString(event.button); printf("released\n");
 			if (this->isMouseLocked) break;
 			mouseReleased[event.button.button] = true;
 			mouseDown[event.button.button] = false;
@@ -176,7 +171,6 @@ void Input::update()
 			if ((event.caxis.value < -this->axisDeadZone) ||
 				(event.caxis.value >  this->axisDeadZone))
 			{
-				//DEBUG WITH : axisToString(event.caxis);
 				if (!axisDown[currController].button[event.caxis.axis]) axisPressed[currController].button[event.caxis.axis] = true;
 				axisDown[currController].button[event.caxis.axis] = true;
 
@@ -214,7 +208,6 @@ void Input::update()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			//DEBUG WITH : joyToString(event.cbutton); printf("down\n");
 			// Get controller id
 			currController = getControllerID(event.caxis.which);
 			if (this->isControllerLocked[currController]) break;
@@ -223,7 +216,6 @@ void Input::update()
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			//DEBUG WITH : joyToString(event.cbutton); printf("released\n");
 			// Get controller id
 			currController = getControllerID(event.caxis.which);
 			if (this->isControllerLocked[currController]) break;
@@ -415,19 +407,19 @@ void Input::openController(int id)
 	// Skip if invalid
 	if (!SDL_IsGameController(id))
 	{
-		printf("ERROR: Failed to open controller %s\n", SDL_GetError());
+		printf("ERROR: [Input] Failed to open controller %s\n", SDL_GetError());
 		return;
 	}
 	// Break if opened max num of controllers
 	if (numControllers >= MAX_CONTROLLERS)
 	{
-		printf("ERROR: Too much controllers, limit reached %i\n", MAX_CONTROLLERS);
+		printf("ERROR: [Input] Too much controllers, limit reached %i\n", MAX_CONTROLLERS);
 		return;
 	}
 	// Break if controller alreadly opened
 	if (id < numControllers)
 	{
-		printf("ERROR: Controller %i alreadly added\n", id + 1);
+		printf("ERROR: [Input] Controller %i alreadly added\n", id + 1);
 		return;
 	}
 	// Successfully opened controller
@@ -436,9 +428,6 @@ void Input::openController(int id)
 	
 	// Unlock opened controller
 	this->isControllerLocked[id] = false;
-	
-	//DEBUG WITH : 
-	//printf("DEBUG: Success opening controller name: %s : num %i / total %i\n", SDL_GameControllerNameForIndex(id), id + 1, SDL_NumJoysticks());
 }
 
 void Input::closeController(int id)
@@ -462,8 +451,6 @@ void Input::closeController(int id)
 
 		// Lock closed controller
 		this->isControllerLocked[id] = true;
-
-		//printf("DEBUG: Closed controller %i / now total %i\n", id + 1, numControllers);
 	}
 }
 

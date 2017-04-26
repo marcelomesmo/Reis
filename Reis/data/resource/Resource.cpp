@@ -2,7 +2,7 @@
 
 Resource::~Resource() 
 {
-	//printf("DEBUG: resource freed\n");
+	
 }
 
 std::string Resource::getResourceFilePath()

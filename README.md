@@ -9,7 +9,7 @@ See the [Wiki](https://github.com/marcelomesmo/Reis/wiki) for full documentation
 Doxygen available [here](http://marcelomesmo.github.io/Reis-doxygen/html/index.html).  
 Download most recent Lib version [here](https://www.dropbox.com/s/f3foxri3ktqql3z/Reis-lib-v1.0.rar?dl=0).  
   
-Current version 0.0.1 - February, 2016.  
+Current version 0.9.0 - April, 2017.  
   
 Refactoring Journal:
 
@@ -72,8 +72,13 @@ Added ResouceHolder to Resources.
 Added ResouceManager to Resources.  
 Added XML support to Resources.  
   
-24/04/2017  
+24/04/2017
 Added color key support to MusseXMLParser.  
+  
+26/04/2017  
+Added anchor point support to MusseXMLParser.  
+Revised Error messages.  
+Removed Debug messages.  
   
   </br>
 Feel free to make contributions.  

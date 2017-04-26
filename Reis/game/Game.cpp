@@ -25,8 +25,6 @@ void Game::create(const char* title, int width, int height, bool set_fullscreen,
 	lastTime = 0;
 
 	frameTicks = 0;
-
-	//printf("DEBUG: Game Init\n");
 }
 
 void Game::end()
@@ -43,40 +41,37 @@ void Game::end()
 
 	// Clean up Graphics
 	g.free();
-
-	//printf("DEBUG: Game Cleanup\n");
 }
 
 // Init a list of all scenes with ID from 0 to allScenesHere.size-1
 void Game::prepareScenes(vector<Scene*> allScenesHere)
 {
 	scenesList = allScenesHere;
-	//cout << "DEBUG: Number of scenes: " << scenesList.size() << " \n";
 }
 // Push the scene by ID
 void Game::enterScene(int id, Transition* leave, Transition* enter)
 {
-	// Se o ID for incorreto nao muda
-	if ((unsigned)id >= this->scenesList.size()) cout << "ERROR: Invalid scene ID " << id << ".\n";
-	// Se o ID for correto muda de estado
+	// Invalid ID won't change scene
+	if ((unsigned)id >= this->scenesList.size()) cout << "ERROR: [Game] Invalid scene ID " << id << ".\n";
+	// Valid ID will change scene
 	else
 	{
-		// Pega o ID do proximo scene
+		// Get ID for the next scene
 		nextScene = id;
 
-		// Se tiver FadeIn e ja nao estiver em transicao
+		// Needs to FadeIn and transition is inactive
 		if (enter != NULL)
 		{
 			enterTransition = enter;
 		}
 
-		// Se tiver um FadeOut e ja nao estiver em transicao
+		// Needs to FadeOut and transition is inactive
 		if (leave != NULL)
 		{
-			// Ativa o FadeOut
+			// Active FadeOut
 			leaveTransition = leave;
 		}
-		// Se nao, muda automaticamente
+		// Else, changes without fading
 		else changeScene(scenesList[id]);
 	}
 }
@@ -136,7 +131,7 @@ void Game::start()
 		//printf("Early game, loading first scene\n");
 	}
 	else {
-		printf("ERROR: We don't have first Scene initialization.\n"); 
+		printf("ERROR: [Game] We don't have first Scene initialization.\n"); 
 		quit();
 	}
 
@@ -169,7 +164,7 @@ void Game::update()
 		leaveTransition->update(this, delta);
 		if (leaveTransition->isFinished())
 		{
-			//printf("DEBUG: Finished LEAVE transition, loading Scene.\n");
+			//Finished LEAVE transition, loading Scene.
 			changeScene(scenesList[nextScene]);
 			delete leaveTransition;
 			leaveTransition = NULL;
@@ -184,7 +179,7 @@ void Game::update()
 		enterTransition->update(this, delta);
 		if (enterTransition->isFinished())
 		{
-			//printf("DEBUG: Finished ENTER transition, Scene fully loaded.\n");
+			//Finished ENTER transition, Scene fully loaded.
 			delete enterTransition;
 			enterTransition = NULL;
 		}

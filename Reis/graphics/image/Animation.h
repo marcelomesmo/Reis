@@ -14,9 +14,6 @@
 class Animation : public Resource
 {
 public:
-	/*Animation(vector<Sprite*> spriteList);
-	Animation(SpriteSheet* sheet, int count, int frames, int duration);
-	Animation(SpriteSheet* sheet, int sheetPosX, int sheetPosY, int frames, int duration);*/
 	Animation();
 
 	/**
@@ -119,15 +116,27 @@ public:
 	 */
 	bool addFrame(SpriteSheet* sheet, int sheetPosX, int sheetPosY, int duration);
 	/**
-	 * @brief      Add a new Sprite to the Animation.
+	 * @brief      Add a new Sprite to the Animation using a clip.
 	 *
 	 * @param      sheet     SpriteSheet used to get Sprites for the Animation.
-	 * @param      clip      Sprite clip from XML file.
+	 * @param      clip      The image clip dimensions.
 	 * @param[in]  duration  Duration of this Sprite in the Animation.
 	 *
 	 * @return     True if loaded successfully.
 	 */
 	bool addFrame(SpriteSheet* sheet, SDL_Rect* clip, int duration);
+
+	/**
+	 * @brief      Add a new Sprite to the Animation using a Sprite from MuSSE
+	 *             XML.
+	 *
+	 * @param      sheet     SpriteSheet used to get Sprites for the Animation.
+	 * @param[in]  s         Sprite_Xml containing infos on the Sprite.
+	 * @param[in]  duration  Duration of this Sprite in the Animation.
+	 *
+	 * @return     True if loaded successfully.
+	 */
+	bool addFrame(SpriteSheet* sheet, Sprite_Xml s, int duration);
 
 	/**
 	* @brief      Render Animation on screen.

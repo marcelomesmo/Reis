@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-Sprite::Sprite(std::string path, Color* transparent/*, std::string ID, std::string type) : Resource(ID, path, type*/)
+Sprite::Sprite(std::string path, Color* transparent)
 {
 	create(path, transparent);
 }
@@ -10,7 +10,6 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
-	//std::cout << "DEBUG: Sprite is dead." << std::endl;
 	free();
 }
 
@@ -25,7 +24,7 @@ bool Sprite::create(SpriteSheet* sheet, int count)
 
 	if (sheet->getImage() == NULL)
 	{
-		printf("ERROR: Couldn't get Sprite from SpriteSheet.\n");
+		printf("ERROR: [Sprite::create] Couldn't get Sprite from SpriteSheet.\n");
 		return false;
 	}
 
@@ -51,7 +50,7 @@ bool Sprite::create(SpriteSheet* sheet, SDL_Rect* clip)
 
 	if (sheet->getImage() == NULL)
 	{
-		printf("ERROR: Couldn't get Sprite from SpriteSheet.\n");
+		printf("ERROR: [Sprite::create] Couldn't get Sprite from SpriteSheet.\n");
 		return false;
 	}
 
@@ -76,7 +75,7 @@ bool Sprite::create(SpriteSheet* sheet, int sheetPosX, int sheetPosY)
 
 	if (sheet->getImage() == NULL)
 	{
-		printf("ERROR: Couldn't get Sprite from SpriteSheet.\n");
+		printf("ERROR: [Sprite::create] Couldn't get Sprite from SpriteSheet.\n");
 		return false;
 	}
 
@@ -107,7 +106,7 @@ bool Sprite::create(std::string path, Color* transparent)
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface == NULL)
 	{
-		printf("ERROR: Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		printf("ERROR: [Sprite::create] Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
 	}
 	else
 	{
@@ -115,7 +114,7 @@ bool Sprite::create(std::string path, Color* transparent)
 		SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, SDL_PIXELFORMAT_RGBA8888, NULL);
 		if (formattedSurface == NULL)
 		{
-			printf("ERROR: Unable to convert loaded surface to display format! %s\n", SDL_GetError());
+			printf("ERROR: [Sprite::create] Unable to convert loaded surface to display format! %s\n", SDL_GetError());
 		}
 		else
 		{
@@ -123,7 +122,7 @@ bool Sprite::create(std::string path, Color* transparent)
 			newTexture = SDL_CreateTexture(Graphics::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h);
 			if (newTexture == NULL)
 			{
-				printf("ERROR: Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
+				printf("ERROR: [Sprite::create] Unable to create blank texture! SDL Error: %s\n", SDL_GetError());
 			}
 			else
 			{
@@ -175,7 +174,6 @@ bool Sprite::create(std::string path, Color* transparent)
 	}
 
 	//Return success
-	//printf("DEBUG: Sucessfully loaded image: %s\n", path.c_str());
 	image = newTexture;
 	return image != NULL;
 }
@@ -204,8 +202,8 @@ void Sprite::draw(int x, int y, Flip flipped)
 {
 	//Set rendering space and render to screen
 	graphicsBox = { x - (int)(((float)anchorX / (float)100) * this->width), y - (int)(((float)anchorY / (float)100) * this->height), this->width, this->height };
-	// Will generate a Warning while compiling. Ignore it.
-
+	
+	std::cout << "y: " << anchorY << std::endl;
 	//Set clip rendering dimensions
 	if (this->clipRect != NULL)
 	{
@@ -243,7 +241,7 @@ void Sprite::clip(int x, int y, int w, int h)
 		this->clipRect->w = w;
 		this->clipRect->h = h;
 	}
-	else printf("ERROR: Invalid clip on Sprite: out of bounds.\n");
+	else printf("ERROR: [Sprite::clip] Invalid clip on Sprite: out of bounds.\n");
 }
 void Sprite::clip(SDL_Rect* rect)
 {
