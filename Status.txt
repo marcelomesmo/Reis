@@ -1,5 +1,53 @@
 Refactoring Journal:
 
+Working functionalities:
+
+data
+-> resource
+--- Resource
+--- ResourceManager
+-> timer
+--- Clock
+-> xml
+--- MuSSEParser
+--- ResourceManagerParser
+
+game
+-> transition
+--- Fade In
+--- Fade Out
+--- Transition
+- Game
+- Scene
+
+graphics
+-> font
+--- Font
+-> image
+--- Sprite
+--- Animation
+--- SpriteSheet
+- Color
+- ColorManager
+- Graphics
+
+input
+- Input
+- InputDefinitions
+
+
+===============================================================
+Can do:
+1. Create Game with Scenes.
+2. Generic transitions and fade in/fade out between Scenes.
+3. Graphics manager, Shapes (not yet uploaded) and Colors (RGB)
+4. Input manager (keyboard, mouse and up to 4 gamepads).
+5. Resource manager with XML parsers.
+6. Timers.
+7. Simple font (.ttf) and Sprite font (not yet uploaded).
+8. Sprites, SpriteSheets and Animations.
+===============================================================
+
 
 
 Stopped pushes due to lack of time. Project on standby.
