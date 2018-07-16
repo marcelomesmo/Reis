@@ -9,12 +9,6 @@ Doxygen available [here](http://marcelomesmo.github.io/Reis-doxygen/html/index.h
 Download most recent Lib version [here](https://www.dropbox.com/s/f3foxri3ktqql3z/Reis-lib-v1.0.rar?dl=0).  
 Full log [here](Status.txt).  
   
-Started developing Roots (old), 2015.  
-Refactoring code since February, 2016.  
-Renamed to Reis.  
-Current version 0.9.0 in April, 2017.  
-Stopped making updates in May, 2017.  
-  
 Can do:  
 1. Create Game with Scenes.  
 2. Generic transitions and fade in/fade out between Scenes.  
@@ -33,4 +27,11 @@ Authors’ contact:
 https://marcelomesmo.github.io  
 marcelo.barbosa (at) ifrn.edu.br   
   
-Reis is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).
+Reis is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).  
+  
+Quick log:  
+    
+Started developing Roots (old), 2015.  
+Renamed to Reis. Refactoring code since February, 2016. 
+Current version 0.9.0 in April, 2017.  
+Stopped making updates in May, 2017.  
