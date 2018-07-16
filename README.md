@@ -30,8 +30,7 @@ marcelo.barbosa (at) ifrn.edu.br
 Reis is distributed under the terms and conditions of the [zlib/png license](http://zlib.net/zlib_license.html).  
   
 Quick log:  
-    
 Started developing Roots (old), 2015.  
-Renamed to Reis. Refactoring code since February, 2016. 
+Renamed to Reis. Refactoring code since February, 2016.  
 Current version 0.9.0 in April, 2017.  
 Stopped making updates in May, 2017.  
