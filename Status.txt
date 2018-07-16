@@ -1,0 +1,72 @@
+Refactoring Journal:
+
+
+
+Stopped pushes due to lack of time. Project on standby.
+
+26/04/2017
+Added anchor point support to MusseXMLParser.
+Revised Error messages.
+Removed Debug messages.
+
+24/04/2017 
+Added color key support to MusseXMLParser.
+
+13/03/2017 
+Renamed Timer to Clock.
+Added Resouce to Resources.
+Changed Sprite, Animation and SpriteSheet inheritance.
+Added ResouceHolder to Resources.
+Added ResouceManager to Resources.
+Added XML support to Resources.
+
+20/03/2016
+Added Animation to Graphics.
+Added XML support to SpriteSheet.
+Added MuSSEXmlParser to Data.
+Changed Sprite creation.
+Added anchor support to Sprite.
+
+Took back on making smaller but faster pushes due to lack of time. Making bigger slow pushes again.
+
+07/03/2016
+Changed class name from GameState to Scene.
+Added Sprite to Graphics.
+Added SpriteSheet to Graphics.
+Changed a lot of .init()/.load() to .create().
+Changed a lot of .free() to .end().
+Added ColorManager to Graphics.
+Added print key to string functionality to Input.
+
+Added How to Use - Scene to Wiki.
+Added example images to Wiki tutorials.
+
+Decided on making smaller but faster pushes instead of big but slow ones.
+
+23/02/2016
+Created Wiki.
+Added Install Guide to Wiki.
+Added How to Use - Create Game to Wiki.
+
+16/02/2016
+Added multiple controller support.
+Changed name from Raiz to Reis.
+Added doxygen and icon.
+
+14/02/2016
+Added controller support into Input.
+
+10/02/2016
+Added Input.
+Added keyboard support into Input.
+Added mouse support into Input.  
+  
+07/02/2016
+Added Game and GameState classes.
+Added Graphics.
+Added Font to Graphics.
+Added Color to Graphics.
+Added Transition.
+Added FadeOut to Transition.
+Added FadeIn to Transition.
+Added Timer.
